@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "structs.h": "c",
+        "debug_info.h": "c",
+        "enums.h": "c",
+        "nvic_driver.h": "c",
+        "stdio.h": "c",
+        "led.h": "c",
+        "power.h": "c",
+        "rx_control.h": "c"
+    }
+}

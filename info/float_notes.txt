@@ -1,0 +1,8 @@
+Floating point numbers can be single precision (�float� in C) or double precision (�double� in C).
+
+The FPU in the Cortex-M4 processor supports single precision operations, but not double. If double 
+precision calculation is present, the C compiler will use runtime library functions to handle the calculation 
+in software. For best performance, it is best to handle the calculation in single precision if possible.  
+Note that most compilers will emulate double precision using integer operations (not single precision FP).
+
+Use float not double if you have FPU. double is not floating point, that's why FPU does not have any effect.
