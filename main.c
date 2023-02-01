@@ -3,7 +3,6 @@
  * @author SurgeExperiments
  */
 
-/* Includes F_CPU (also included in other files below, but need F_CPU immediately) */
 #include "flight_controller/structs.h"
 #include "flight_controller/enums.h"
 
