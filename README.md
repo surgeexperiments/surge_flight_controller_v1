@@ -1,5 +1,5 @@
 ## Additional information
-- Additional information about this project and it's progression (incl war stories!)
+- Additional information about this project and it's progression (incl war stories and a flight video!)
   is found here: https://surge-lo.atlassian.net/wiki/spaces/PROJECTPRE/pages/524289/
 - A presentation of a reverse engineering project I did is found here:
   https://surge-lo.atlassian.net/wiki/spaces/PROJECTPRE/pages/65555/
