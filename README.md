@@ -18,12 +18,12 @@ is not included in compilation. However it can be ported and utilized.
 ## Folders
 - `arm_drivers/` Many drivers written almost from or from scratch for the stm32f411
   using the reference manual only.
-- arm_essentials/ files required to compile
-- hardware_drivers/ Drivers written mostly from scratch for external sensors ect
+- `arm_essentials/` files required to compile
+- `hardware_drivers/` Drivers written mostly from scratch for external sensors ect
   using using reference manuals only.
-- flight_controller/ Main code that makes the drone fly
-- main.c Flight loop
-- startup_stm32*.s/c files required for booting the discovery board
+- `flight_controller/` Main code that makes the drone fly
+- `main.c` Flight loop
+- `startup_stm32*.s/c` files required for booting the discovery board
   and activating the external oscillator.
 
 ## Coding style
