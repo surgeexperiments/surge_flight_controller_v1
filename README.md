@@ -1,3 +1,8 @@
+## Additional information
+- Additional information about this project and it's progression (incl war stories!)
+  is found here: https://surge-lo.atlassian.net/wiki/spaces/PROJECTPRE/pages/524289/
+- A presentation of a reverse engineering project I did is found here:
+  https://surge-lo.atlassian.net/wiki/spaces/PROJECTPRE/pages/65555/
 
 ## Note:
 This is an early version of this project that flyes well, especially in acro mode.
