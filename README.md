@@ -5,7 +5,8 @@
   https://surge-lo.atlassian.net/wiki/spaces/PROJECTPRE/pages/65555/
 
 ## Note:
-This is an early version of this project that flyes well, especially in acro mode.
+This is an early version of this project that flyes well, especially in acro mode (when you
+control the drones angular velocity for each axis with the remote controller).
 Additional stuff like gps (and better auto levelling) have been made however it's not
 flight ready so it's not being uploaded (to avoid crashed drones or safety hazards :)
 This project was initially built for another embedded processor.
@@ -15,7 +16,7 @@ One example is found in hardware_drivers/stream_flash_system/ This
 is not included in compilation. However it can be ported and utilized.
 
 ## Folders
-- arm_drivers/ Many drivers written almost from or from scratch for the stm32f411
+- `arm_drivers/` Many drivers written almost from or from scratch for the stm32f411
   using the reference manual only.
 - arm_essentials/ files required to compile
 - hardware_drivers/ Drivers written mostly from scratch for external sensors ect
