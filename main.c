@@ -97,8 +97,8 @@ int main(void) {
 
 	LED_ON(3);
 	if(imu_initialize_hardware(imu_init_selector,
-							   &(imu_realtime_data.gyroCalibrationData),
-							   &(imu_realtime_data.accelCalibrationData)) != 0) {
+                               &(imu_realtime_data.gyroCalibrationData),
+                               &(imu_realtime_data.accelCalibrationData)) != 0) {
 		infinite_error_loop(); 
 	}		
 
@@ -124,10 +124,10 @@ int main(void) {
 	tim9_setup_for_delay_count_us();
 
 	pid_init_controller_structs(&g_pid_roll_rotation,
-								&g_pid_pitch_rotation,
-								&g_pid_yaw_rotation,
-								&g_pid_roll_angle,
-								&g_pid_pitch_angle);
+                                &g_pid_pitch_rotation,
+                                &g_pid_yaw_rotation,
+                                &g_pid_roll_angle,
+                                &g_pid_pitch_angle);
 
 	/* FLIGHT LOOP */
 	while(1){
@@ -161,24 +161,24 @@ int main(void) {
 				if(imu_fetch_filtered_data(curr_imu_mode, &imu_realtime_data) != 0) {infinite_error_loop(); }
 
 				flight_mode_kalman(&kalman_vars_x,
-								   &kalman_vars_y, 
-								   &angle_orientation_data,
-								   &desired_rot_speed_3_axes,
-								   &flight_mode,
-								   imu_realtime_data,
-								   g_rx_channel_pulses,
-								   LOOP_TIME_MICROSECONDS);
-				break;
+                                   &kalman_vars_y, 
+                                   &angle_orientation_data,
+                                   &desired_rot_speed_3_axes,
+                                   &flight_mode,
+                                   imu_realtime_data,
+                                   g_rx_channel_pulses,
+                                   LOOP_TIME_MICROSECONDS);
+                break;
 
 			case AUTO_LEVEL_L3GD_LSM303DLHC_DMA_MAHONY: 
 				if(imu_fetch_filtered_data(curr_imu_mode, &imu_realtime_data) != 0) {infinite_error_loop(); }
 
 				flight_mode_mahony(&angle_orientation_data,
-								   &mahony_vars,
-								   &desired_rot_speed_3_axes,
-								   &flight_mode,
-								   imu_realtime_data,
-								   g_rx_channel_pulses);
+                                   &mahony_vars,
+                                   &desired_rot_speed_3_axes,
+                                   &flight_mode,
+                                   imu_realtime_data,
+                                   g_rx_channel_pulses);
 			 	break; 
 
 			default: {
@@ -189,19 +189,19 @@ int main(void) {
 
 		/* This requires 500_DPS setting for the gyro */
 		run_pid_calculations(imu_realtime_data.gyroDataFilteredToDegSeconds,
-						  	 desired_rot_speed_3_axes,
-						  	 &pid_rotation_output,
-						  	 g_rx_channel_pulses.three,
-						  	 real_time_settings.use_tpa);
+                             desired_rot_speed_3_axes,
+                             &pid_rotation_output,
+                             g_rx_channel_pulses.three,
+                             real_time_settings.use_tpa);
 
 		battery_voltage = BATTERY_COMPENSATE(battery_voltage);
 
 		esc_calculate_pulse_length(flight_mode,
-								   real_time_settings.esc_voltage_compensation,
-								   g_rx_channel_pulses.three,
-								   (int)1260,
-								   pid_rotation_output,
-								   &esc_output);
+                                   real_time_settings.esc_voltage_compensation,
+                                   g_rx_channel_pulses.three,
+                                   (int)1260,
+                                   pid_rotation_output,
+                                   &esc_output);
 
 		/* Make the loop run exactly LOOP_TIME_MICROSECONDS */
 		while(tim9_read_count() < LOOP_TIME_MICROSECONDS) {
