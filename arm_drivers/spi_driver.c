@@ -5,42 +5,40 @@
  *	@brief This file contains functions to init and use SPI.
  */
 
-
 #include "spi_driver.h"
 #include "gpio_driver.h"
 
-
 /**
- * @brief set up a SPI-struct for the quad. 
+ * @brief set up a SPI-struct for the quad.
  *
- * TODO: move this into the HW driver, replace with generic 
+ * TODO: move this into the HW driver, replace with generic
  */
-static void SPI_StructInit(SPI_InitTypeDef* SPI_InitStruct)
+static void SPI_StructInit(SPI_InitTypeDef *SPI_InitStruct)
 {
-	/*--------------- Reset SPI init structure parameters values -----------------*/
-	/* Initialize the SPI_Direction member */
-	SPI_InitStruct->SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-	/* initialize the SPI_Mode member */
-	SPI_InitStruct->SPI_Mode = SPI_Mode_Master;
-	/* initialize the SPI_DataSize member */
-	SPI_InitStruct->SPI_DataSize = SPI_DataSize_8b;
-	/* Initialize the SPI_CPOL member */
-	SPI_InitStruct->SPI_CPOL = SPI_CPOL_Low;
-	/* Initialize the SPI_CPHA member */
-	SPI_InitStruct->SPI_CPHA = SPI_CPHA_1Edge;
-	/* Initialize the SPI_NSS member */
-	SPI_InitStruct->SPI_NSS = SPI_NSS_Soft;
-	/* Initialize the SPI_BaudRatePrescaler member */
-	SPI_InitStruct->SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
-	/* Initialize the SPI_FirstBit member */
-	SPI_InitStruct->SPI_FirstBit = SPI_FirstBit_MSB;
-	/* Initialize the SPI_CRCPolynomial member */
-	SPI_InitStruct->SPI_CRCPolynomial = 7;
+    /*--------------- Reset SPI init structure parameters values -----------------*/
+    /* Initialize the SPI_Direction member */
+    SPI_InitStruct->SPI_Direction = SPI_Direction_2Lines_FullDuplex;
+    /* initialize the SPI_Mode member */
+    SPI_InitStruct->SPI_Mode = SPI_Mode_Master;
+    /* initialize the SPI_DataSize member */
+    SPI_InitStruct->SPI_DataSize = SPI_DataSize_8b;
+    /* Initialize the SPI_CPOL member */
+    SPI_InitStruct->SPI_CPOL = SPI_CPOL_Low;
+    /* Initialize the SPI_CPHA member */
+    SPI_InitStruct->SPI_CPHA = SPI_CPHA_1Edge;
+    /* Initialize the SPI_NSS member */
+    SPI_InitStruct->SPI_NSS = SPI_NSS_Soft;
+    /* Initialize the SPI_BaudRatePrescaler member */
+    SPI_InitStruct->SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
+    /* Initialize the SPI_FirstBit member */
+    SPI_InitStruct->SPI_FirstBit = SPI_FirstBit_MSB;
+    /* Initialize the SPI_CRCPolynomial member */
+    SPI_InitStruct->SPI_CRCPolynomial = 7;
 }
 
 /**
  * @author SurgeExperiments
- * 
+ *
  * @brief init SPI for LGD20 on the STM32F411 discovery card
  * 		  NOTE: normally I would not add a sensor specific
  * 				init function in a library, however this
@@ -51,117 +49,123 @@ static void SPI_StructInit(SPI_InitTypeDef* SPI_InitStruct)
  * 				  the LGD20 lol has ONE mode rofl).
  * 				  See spi_driver.h for potential values.
  */
-void spi_init_lgd20_devboard(SPI_TypeDef* SPIx, uint8_t spi_mode)
+void spi_init_lgd20_devboard(SPI_TypeDef *SPIx, uint8_t spi_mode)
 {
-	if(SPIx == SPI1){
-		/* Init clock */
-		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+    if (SPIx == SPI1)
+    {
+        /* Init clock */
+        RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 
-		/*      
-		SPI1: 
-		- PA4: SPI1_NSS
-		- PA5: SPI1_SCK!
-		- PA6: SPI1_MISO!
-		- PA7: SPI1_MOSI !
-		*/
-		gpio_init_clock(GPIOA);
-		gpio_init_pins_alt_func(GPIOA, 5, GPIO_AF_SPI1, GPIO_SPEED_HIGH, GPIO_TYPE_PUSH_PULL, GPIO_NOPULL); 
-		gpio_init_pins_alt_func(GPIOA, 6, GPIO_AF_SPI1, GPIO_SPEED_HIGH, GPIO_TYPE_PUSH_PULL, GPIO_NOPULL); 
-		gpio_init_pins_alt_func(GPIOA, 7, GPIO_AF_SPI1, GPIO_SPEED_HIGH, GPIO_TYPE_PUSH_PULL, GPIO_NOPULL); 
-	}
+        /*
+        SPI1:
+        - PA4: SPI1_NSS
+        - PA5: SPI1_SCK!
+        - PA6: SPI1_MISO!
+        - PA7: SPI1_MOSI !
+        */
+        gpio_init_clock(GPIOA);
+        gpio_init_pins_alt_func(GPIOA, 5, GPIO_AF_SPI1, GPIO_SPEED_HIGH, GPIO_TYPE_PUSH_PULL, GPIO_NOPULL);
+        gpio_init_pins_alt_func(GPIOA, 6, GPIO_AF_SPI1, GPIO_SPEED_HIGH, GPIO_TYPE_PUSH_PULL, GPIO_NOPULL);
+        gpio_init_pins_alt_func(GPIOA, 7, GPIO_AF_SPI1, GPIO_SPEED_HIGH, GPIO_TYPE_PUSH_PULL, GPIO_NOPULL);
+    }
 
-	/* TODO: Add pin init if needed */
-	else if (SPIx == SPI2) {
-		RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
-	}
-	else if (SPIx == SPI3) {
-		RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
-	}
-	else if (SPIx == SPI4) {
-		RCC->AHB2ENR |= RCC_APB2ENR_SPI4EN;
-	}
-	
-	SPI_InitTypeDef spi_init_st;
-	SPI_StructInit(&spi_init_st);
-	
-	/*
-	The SPI clock is derived from the APB1 or the
-	APB2 bus depending on which SPI channel you use. 
+    /* TODO: Add pin init if needed */
+    else if (SPIx == SPI2)
+    {
+        RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
+    }
+    else if (SPIx == SPI3)
+    {
+        RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
+    }
+    else if (SPIx == SPI4)
+    {
+        RCC->AHB2ENR |= RCC_APB2ENR_SPI4EN;
+    }
 
-	The APB1 and APB2 bus speed is set by dividing the sysclock by a prescaler
-	APB2: RCC->CFGR |= RCC_CFGR_PPRE2_DIV2: runs at 50mhz when the sysclock is 100mhz
-	APB1: RCC->CFGR |= RCC_CFGR_PPRE1_DIV4: Runs at 25 mhz when the sysclock is 100mhz
-	
-	Your prescaler for the SPI must divide these APB bus speeds
-	to meet the desired speed of the slave, ect 10mhz max means APB2 must be
-	divided by the smallest prescaler >=5
-	: APB2freq/maxFreqForSlave == 50mhz/10mhz == 5
-	*/
-	
-	/* On a sysclock of 100mhz the APB2/div2 runs at 50mhz.
-	 * Using the SPI_8 prescaller means the SPI now runs at 6.25 mhz
-	 */
-	spi_init_st.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
-	
-	/* SPI mode */
-	if (spi_mode == 0) {
-		spi_init_st.SPI_CPOL = SPI_CPOL_Low;
-		spi_init_st.SPI_CPHA = SPI_CPHA_1Edge;
-	} 
-	else if (spi_mode == 1) {
-		spi_init_st.SPI_CPOL = SPI_CPOL_Low;
-		spi_init_st.SPI_CPHA = SPI_CPHA_2Edge;
-	} 
-	else if (spi_mode == 2) {
-		spi_init_st.SPI_CPOL = SPI_CPOL_High;
-		spi_init_st.SPI_CPHA = SPI_CPHA_1Edge;
-	} 
-	else if (spi_mode == 3) {
-		spi_init_st.SPI_CPOL = SPI_CPOL_High;
-		spi_init_st.SPI_CPHA = SPI_CPHA_2Edge;
-	}
-	
-	/* Disable SPI before initialization */
-	SPIx->CR1 &= ~SPI_CR1_SPE;
+    SPI_InitTypeDef spi_init_st;
+    SPI_StructInit(&spi_init_st);
 
-	uint16_t tmpreg = 0;
+    /*
+    The SPI clock is derived from the APB1 or the
+    APB2 bus depending on which SPI channel you use.
 
+    The APB1 and APB2 bus speed is set by dividing the sysclock by a prescaler
+    APB2: RCC->CFGR |= RCC_CFGR_PPRE2_DIV2: runs at 50mhz when the sysclock is 100mhz
+    APB1: RCC->CFGR |= RCC_CFGR_PPRE1_DIV4: Runs at 25 mhz when the sysclock is 100mhz
 
-	/*---------------------------- SPIx CR1 Configuration ------------------------*/
-	/* Get the SPIx CR1 value */
-	tmpreg = SPIx->CR1;
+    Your prescaler for the SPI must divide these APB bus speeds
+    to meet the desired speed of the slave, ect 10mhz max means APB2 must be
+    divided by the smallest prescaler >=5
+    : APB2freq/maxFreqForSlave == 50mhz/10mhz == 5
+    */
 
-	/* Clear BIDIMode, BIDIOE, RxONLY, SSM, SSI, LSBFirst, BR, MSTR, CPOL and CPHA bits */
-	tmpreg &= SPI_CR1_CLEAR_MASK ;
+    /* On a sysclock of 100mhz the APB2/div2 runs at 50mhz.
+     * Using the SPI_8 prescaller means the SPI now runs at 6.25 mhz
+     */
+    spi_init_st.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
 
-	/* Configure SPIx: direction, NSS management, first transmitted bit, BaudRate prescaler
-		master/salve mode, CPOL and CPHA */
-	/* Set BIDImode, BIDIOE and RxONLY bits according to SPI_Direction value */
-	/* Set SSM, SSI and MSTR bits according to SPI_Mode and SPI_NSS values */
-	/* Set LSBFirst bit according to SPI_FirstBit value */
-	/* Set BR bits according to SPI_BaudRatePrescaler value */
-	/* Set CPOL bit according to SPI_CPOL value */
-	/* Set CPHA bit according to SPI_CPHA value */
-	tmpreg |= (uint16_t)((uint32_t)  spi_init_st.SPI_Direction | spi_init_st.SPI_Mode |
-									 spi_init_st.SPI_DataSize | spi_init_st.SPI_CPOL |  
-									 spi_init_st.SPI_CPHA | spi_init_st.SPI_NSS |  
-									 spi_init_st.SPI_BaudRatePrescaler |
-									 spi_init_st.SPI_FirstBit);
+    /* SPI mode */
+    if (spi_mode == 0)
+    {
+        spi_init_st.SPI_CPOL = SPI_CPOL_Low;
+        spi_init_st.SPI_CPHA = SPI_CPHA_1Edge;
+    }
+    else if (spi_mode == 1)
+    {
+        spi_init_st.SPI_CPOL = SPI_CPOL_Low;
+        spi_init_st.SPI_CPHA = SPI_CPHA_2Edge;
+    }
+    else if (spi_mode == 2)
+    {
+        spi_init_st.SPI_CPOL = SPI_CPOL_High;
+        spi_init_st.SPI_CPHA = SPI_CPHA_1Edge;
+    }
+    else if (spi_mode == 3)
+    {
+        spi_init_st.SPI_CPOL = SPI_CPOL_High;
+        spi_init_st.SPI_CPHA = SPI_CPHA_2Edge;
+    }
 
-	/* Write to SPIx CR1 */
-	SPIx->CR1 = tmpreg;
-		
-	/* Activate the SPI mode (Reset I2SMOD bit in I2SCFGR register) */
-	SPIx->I2SCFGR &= (uint16_t)~((uint16_t)SPI_I2SCFGR_I2SMOD);
-		
-	/*---------------------------- SPIx CRCPOLY Configuration --------------------*/
-	/* Write to SPIx CRCPOLY */
-	SPIx->CRCPR = spi_init_st.SPI_CRCPolynomial;
-		
-	/* Enable spi */
-	SPIx->CR1 |= SPI_CR1_SPE;
+    /* Disable SPI before initialization */
+    SPIx->CR1 &= ~SPI_CR1_SPE;
+
+    uint16_t tmpreg = 0;
+
+    /*---------------------------- SPIx CR1 Configuration ------------------------*/
+    /* Get the SPIx CR1 value */
+    tmpreg = SPIx->CR1;
+
+    /* Clear BIDIMode, BIDIOE, RxONLY, SSM, SSI, LSBFirst, BR, MSTR, CPOL and CPHA bits */
+    tmpreg &= SPI_CR1_CLEAR_MASK;
+
+    /* Configure SPIx: direction, NSS management, first transmitted bit, BaudRate prescaler
+        master/salve mode, CPOL and CPHA */
+    /* Set BIDImode, BIDIOE and RxONLY bits according to SPI_Direction value */
+    /* Set SSM, SSI and MSTR bits according to SPI_Mode and SPI_NSS values */
+    /* Set LSBFirst bit according to SPI_FirstBit value */
+    /* Set BR bits according to SPI_BaudRatePrescaler value */
+    /* Set CPOL bit according to SPI_CPOL value */
+    /* Set CPHA bit according to SPI_CPHA value */
+    tmpreg |= (uint16_t)((uint32_t)spi_init_st.SPI_Direction | spi_init_st.SPI_Mode |
+                         spi_init_st.SPI_DataSize | spi_init_st.SPI_CPOL |
+                         spi_init_st.SPI_CPHA | spi_init_st.SPI_NSS |
+                         spi_init_st.SPI_BaudRatePrescaler |
+                         spi_init_st.SPI_FirstBit);
+
+    /* Write to SPIx CR1 */
+    SPIx->CR1 = tmpreg;
+
+    /* Activate the SPI mode (Reset I2SMOD bit in I2SCFGR register) */
+    SPIx->I2SCFGR &= (uint16_t) ~((uint16_t)SPI_I2SCFGR_I2SMOD);
+
+    /*---------------------------- SPIx CRCPOLY Configuration --------------------*/
+    /* Write to SPIx CRCPOLY */
+    SPIx->CRCPR = spi_init_st.SPI_CRCPolynomial;
+
+    /* Enable spi */
+    SPIx->CR1 |= SPI_CR1_SPE;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -170,20 +174,20 @@ void spi_init_lgd20_devboard(SPI_TypeDef* SPIx, uint8_t spi_mode)
  * @param SPIx struct telling which SPI bus
  * @param data which data to send
  */
-uint8_t spi_send_u8(SPI_TypeDef* SPIx, uint8_t data) {
+uint8_t spi_send_u8(SPI_TypeDef *SPIx, uint8_t data)
+{
 
-	/* Wait for previous transmissions to complete if DMA TX enabled for SPI */
-	SPI_WAIT(SPIx);
-	
-	/* Fill output buffer with data */
-	SPIx->DR = data;
-	/* Wait for transmission to complete */
-	SPI_WAIT(SPIx);
-	
-	/* Return data from buffer */
-	return SPIx->DR;
+    /* Wait for previous transmissions to complete if DMA TX enabled for SPI */
+    SPI_WAIT(SPIx);
+
+    /* Fill output buffer with data */
+    SPIx->DR = data;
+    /* Wait for transmission to complete */
+    SPI_WAIT(SPIx);
+
+    /* Return data from buffer */
+    return SPIx->DR;
 }
-
 
 /* INFO:
 
@@ -192,10 +196,10 @@ uint8_t spi_send_u8(SPI_TypeDef* SPIx, uint8_t data) {
 � SCK: Serial Clock output for SPI masters and input for SPI slaves.
 � NSS: Slave select. This is an optional pin to select a slave device. This pin acts as a �chip select� to let the SPI master communicate with
        slaves individually and to avoid contention on the data lines. Slave NSS inputs can be driven by standard IO ports on the master device.
-			 The NSS pin may also be used as an output if enabled (SSOE bit) and driven low if the SPI is in master configuration. In this manner,
-			 all NSS pins from devices connected to the Master NSS pin see a low level and become slaves when they are configured in NSS hardware mode.
-			 When configured in master mode with NSS configured as an input (MSTR=1 and SSOE=0) and if NSS is pulled low, the SPI enters the master mode fault state:
-			 the MSTR bit is automatically cleared and the device is configured in slave mode
+             The NSS pin may also be used as an output if enabled (SSOE bit) and driven low if the SPI is in master configuration. In this manner,
+             all NSS pins from devices connected to the Master NSS pin see a low level and become slaves when they are configured in NSS hardware mode.
+             When configured in master mode with NSS configured as an input (MSTR=1 and SSOE=0) and if NSS is pulled low, the SPI enters the master mode fault state:
+             the MSTR bit is automatically cleared and the device is configured in slave mode
 
 The master initiates the transfer.
 Full duplex is supported as the slave can get data on MOSI while transferring on MISO
@@ -204,9 +208,9 @@ Slave select (NSS) pin management Hardware or software slave select management c
 � Software NSS management (SSM = 1) The slave select information is driven internally by the value of the SSI bit in the SPI_CR1 register.
   The external NSS pin remains free for other application uses.
 � Hardware NSS management (SSM = 0) Two configurations are possible depending
-	on the NSS output configuration (SSOE bit in register SPI_CR2). � NSS output enabled (SSM = 0, SSOE = 1)
-	This configuration is used only when the device operates in master mode.
-	The NSS signal is driven low when the master starts the communication and is kept low until the SPI is disabled.
+    on the NSS output configuration (SSOE bit in register SPI_CR2). � NSS output enabled (SSM = 0, SSOE = 1)
+    This configuration is used only when the device operates in master mode.
+    The NSS signal is driven low when the master starts the communication and is kept low until the SPI is disabled.
 
 Clock phase and clock polarity Four possible timing relationships may be chosen by software, using the CPOL and CPHA bits in the SPI_CR1 register.
 The CPOL (clock polarity) bit controls the steady state value of the clock when no data is being transferred. This bit affects both master and slave modes.
@@ -224,20 +228,20 @@ DFF bit in SPI_CR1 register, and determines the data length during transmission/
 
 Configuring the SPI in master mode In the master configuration, the serial clock is generated on the SCK pin.
 Procedure
-	1. Select the BR[2:0] bits to define the serial clock baud rate (see SPI_CR1 register).
-	2. Select the CPOL and CPHA bits to define one of the four relationships between the data transfer and the serial clock (see Figure 194).
-	This step is not required when the TI mode is selected.
-	3. Set the DFF bit to define 8- or 16-bit data frame format
-	4. Configure the LSBFIRST bit in the SPI_CR1 register to define the frame format. This step is not required when the TI mode is selected.
-	5. If the NSS pin is required in input mode, in hardware mode, connect the NSS pin to a high-level signal during the complete byte transmit sequence.
-	   In NSS software mode, set the SSM and SSI bits in the SPI_CR1 register. If the NSS pin is required in output mode, the SSOE bit only should be set.
-		 This step is not required when the TI mode is selected.
-	6. Set the FRF bit in SPI_CR2 to select the TI protocol for serial communications.
-	7. The MSTR and SPE bits must be set (they remain set only if the NSS pin is connected to a high-level signal).
-	   In this configuration the MOSI pin is a data output and the MISO pin is a data input. Transmit sequence The transmit sequence begins when a byte is written in the Tx Buffer.
-		 The data byte is parallel-loaded into the shift register (from the internal bus) during the first bit transmission and then shifted out serially to the MOSI pin MSB first
-		 or LSB first depending on the LSBFIRST bit in the SPI_CR1 register. The TXE flag is set on the transfer of data from the Tx Buffer to the shift register and an interrupt
-		 is generated if the TXEIE bit in the SPI_CR2 register is set.
+    1. Select the BR[2:0] bits to define the serial clock baud rate (see SPI_CR1 register).
+    2. Select the CPOL and CPHA bits to define one of the four relationships between the data transfer and the serial clock (see Figure 194).
+    This step is not required when the TI mode is selected.
+    3. Set the DFF bit to define 8- or 16-bit data frame format
+    4. Configure the LSBFIRST bit in the SPI_CR1 register to define the frame format. This step is not required when the TI mode is selected.
+    5. If the NSS pin is required in input mode, in hardware mode, connect the NSS pin to a high-level signal during the complete byte transmit sequence.
+       In NSS software mode, set the SSM and SSI bits in the SPI_CR1 register. If the NSS pin is required in output mode, the SSOE bit only should be set.
+         This step is not required when the TI mode is selected.
+    6. Set the FRF bit in SPI_CR2 to select the TI protocol for serial communications.
+    7. The MSTR and SPE bits must be set (they remain set only if the NSS pin is connected to a high-level signal).
+       In this configuration the MOSI pin is a data output and the MISO pin is a data input. Transmit sequence The transmit sequence begins when a byte is written in the Tx Buffer.
+         The data byte is parallel-loaded into the shift register (from the internal bus) during the first bit transmission and then shifted out serially to the MOSI pin MSB first
+         or LSB first depending on the LSBFIRST bit in the SPI_CR1 register. The TXE flag is set on the transfer of data from the Tx Buffer to the shift register and an interrupt
+         is generated if the TXEIE bit in the SPI_CR2 register is set.
 
 
 Transmit sequence
@@ -250,10 +254,10 @@ Receive sequence For the receiver, when data transfer is complete:
 � The data in the shift register is transferred to the RX Buffer and the RXNE flag is set
 � An interrupt is generated if the RXNEIE bit is set in the SPI_CR2 register At the last sampling clock edge the RXNE bit is set,
   a copy of the data byte received in the shift register is moved to the Rx buffer. When the SPI_DR register is read, the SPI peripheral
-	returns this buffered value. Clearing the RXNE bit is performed by reading the SPI_DR register. A continuous transmit stream can
-	be maintained if the next data to be transmitted is put in the Tx buffer once the transmission is started. Note that TXE flag should be
-	�1 before any attempt to write the Tx buffer is made. Note: When a master is communicating with SPI slaves which need to be de-selected between
-	transmissions, the NSS pin must be configured as GPIO or another GPIO must be used and toggled by software.
+    returns this buffered value. Clearing the RXNE bit is performed by reading the SPI_DR register. A continuous transmit stream can
+    be maintained if the next data to be transmitted is put in the Tx buffer once the transmission is started. Note that TXE flag should be
+    �1 before any attempt to write the Tx buffer is made. Note: When a master is communicating with SPI slaves which need to be de-selected between
+    transmissions, the NSS pin must be configured as GPIO or another GPIO must be used and toggled by software.
 
 E-compass MEMS (ST MEMS LSM303DLHC) The LSM303DLHC is an ultra-compact low-power system-in-package featuring a
 3D digital linear acceleration sensor and a 3D digital magnetic sensor. It includes a sensing element and an
@@ -278,47 +282,44 @@ PE3: CS_i2c/SPI
 
 */
 
+// OType/OutputTypw: pushPull,
+// No pull resistor
+// Gpio speed high
+// AF functions: GPIO_AF_SPI1
+
+/* SPI pins:
+
+SPI1:
+- PA4: SPI1_NSS
+- PA5: SPI1_SCK!
+- PA6: SPI1_MISO!
+- PA7: SPI1_MOSI !
 
 
-	// OType/OutputTypw: pushPull,
-	// No pull resistor
-	// Gpio speed high
-	// AF functions: GPIO_AF_SPI1
+SPI2:
+- PB9: SPI2_NSS
+- PB10: SPI2_SCK!
+- PB12: SPI2_NSS
+- PB13: SPI2_SCK!
+- PB14: SPI2_MISO!
+- PB15: SPI2_MOSI!
+- PC2: SPI2_MISO!
+- PC3: SPI2_MOSI!
 
-	/* SPI pins:
+SPI3:
+- PA4: SPI3_NSS
+- PA15: SPI3_NSS
+- PB3: SPI3_SCK!
+- PB4: SPI3_MISO!
+- PB5: SPI3_MOSI!
+- PC10: SPI3_SCK!
+- PC11: SPI3_MISO	!
+- PC12: SPI3_MOSI!
 
-	SPI1:
-	- PA4: SPI1_NSS
-	- PA5: SPI1_SCK!
-	- PA6: SPI1_MISO!
-	- PA7: SPI1_MOSI !
+SPI4:
+- PE11: SPI4_NSS
+- PE12: SPI4_SCK!
+- PE13: SPI4_MISO!
+- PE14: SPI4_MOSI !
 
-
-	SPI2:
-	- PB9: SPI2_NSS
-	- PB10: SPI2_SCK!
-	- PB12: SPI2_NSS
-	- PB13: SPI2_SCK!
-	- PB14: SPI2_MISO!
-	- PB15: SPI2_MOSI!
-	- PC2: SPI2_MISO!
-	- PC3: SPI2_MOSI!
-
-	SPI3:
-	- PA4: SPI3_NSS
-	- PA15: SPI3_NSS
-	- PB3: SPI3_SCK!
-	- PB4: SPI3_MISO!
-	- PB5: SPI3_MOSI!
-	- PC10: SPI3_SCK!
-	- PC11: SPI3_MISO	!
-	- PC12: SPI3_MOSI!
-
-	SPI4:
-	- PE11: SPI4_NSS
-	- PE12: SPI4_SCK!
-	- PE13: SPI4_MISO!
-	- PE14: SPI4_MOSI !
-
-	*/
-
+*/

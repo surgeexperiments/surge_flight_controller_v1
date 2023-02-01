@@ -4,7 +4,7 @@
  *
  *	@brief This file contains the prototypes for receiving PWM signals from
  *		   the RX controller on GPIO pins
- */ 
+ */
 
 #ifndef RX_CONTROL_H_
 #define RX_CONTROL_H_
@@ -14,4 +14,3 @@
 void rx_setup_timers_for_receiver_read(void);
 
 #endif /* RX_CONTROL_H_ */
-

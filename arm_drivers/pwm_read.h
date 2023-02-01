@@ -3,7 +3,7 @@
  *	@author SurgeExperiments
  *
  *	@brief  This file contains prototypes for functions that
- *          allows reading PWM signals from GPIO pins via timers.	    
+ *          allows reading PWM signals from GPIO pins via timers.
  */
 
 #ifndef PWM_READ_

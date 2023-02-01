@@ -39,28 +39,24 @@
  *			   pulseview is off sometimes w/salae thing
  */
 
-
 #include "timing_driver.h"
 #include "dbg_swo_driver.h"
 
-
-static volatile uint32_t tim2_ms_since_startup=0;
-static volatile uint32_t tim9_ms_since_startup=0; 
-static volatile uint8_t tim2_timer_interrupt_ran=0;
-static volatile uint8_t tim9_timer_interrupt_ran=0; 
-
+static volatile uint32_t tim2_ms_since_startup = 0;
+static volatile uint32_t tim9_ms_since_startup = 0;
+static volatile uint8_t tim2_timer_interrupt_ran = 0;
+static volatile uint8_t tim9_timer_interrupt_ran = 0;
 
 /* if time 65.5ms "max" timers overflow, these vars will be set to 1 */
-static volatile uint8_t tim9_delaycount_err_overflow=0;
-static volatile uint8_t tim10_delaycount_err_overflow=0;
+static volatile uint8_t tim9_delaycount_err_overflow = 0;
+static volatile uint8_t tim10_delaycount_err_overflow = 0;
 
-//static uint64_t last_cycle_count_64 = 0;
-
+// static uint64_t last_cycle_count_64 = 0;
 
 /*******************************************
-*			INTERRUPT HANDLERS			   *
-*										   *
-*******************************************/
+ *			INTERRUPT HANDLERS			   *
+ *										   *
+ *******************************************/
 
 /**
  * @author SurgeExperiments
@@ -68,35 +64,35 @@ static volatile uint8_t tim10_delaycount_err_overflow=0;
  */
 void TIM2_IRQHandler(void)
 {
-	tim2_timer_interrupt_ran = 1; 
-	++tim2_ms_since_startup;
-	
-	/* clear the interrupt flag */
-	if(TIM2->SR & TIM_SR_UIF){
-		TIM2->SR &= ~TIM_SR_UIF;
-	}
-}
+    tim2_timer_interrupt_ran = 1;
+    ++tim2_ms_since_startup;
 
+    /* clear the interrupt flag */
+    if (TIM2->SR & TIM_SR_UIF)
+    {
+        TIM2->SR &= ~TIM_SR_UIF;
+    }
+}
 
 /**
  * @author SurgeExperiments
- * @brief interrupt that us used to debug delayCount. 
+ * @brief interrupt that us used to debug delayCount.
  * 		  If this runs your code has gone past the 65.5ms max
  * 		  limit for a timer (ie you've fucked up).
  */
 void TIM1_BRK_TIM9_IRQHandler(void)
 {
-	tim9_timer_interrupt_ran = 1; 
-	++tim9_ms_since_startup;
-	
-	tim9_delaycount_err_overflow = 1;
+    tim9_timer_interrupt_ran = 1;
+    ++tim9_ms_since_startup;
 
-	/* clear the interrupt flag */
-	if(TIM9->SR & TIM_SR_UIF){
-		TIM9->SR &= ~TIM_SR_UIF;
-	}
+    tim9_delaycount_err_overflow = 1;
+
+    /* clear the interrupt flag */
+    if (TIM9->SR & TIM_SR_UIF)
+    {
+        TIM9->SR &= ~TIM_SR_UIF;
+    }
 }
-
 
 /**
  * @author SurgeExperiments
@@ -106,18 +102,17 @@ void TIM1_BRK_TIM9_IRQHandler(void)
  */
 void TIM1_UP_TIM10_IRQHandler(void)
 {
-	tim10_delaycount_err_overflow = 1;
-	if(TIM10->SR & TIM_SR_UIF){
-		TIM10->SR &= ~TIM_SR_UIF;
-	}
+    tim10_delaycount_err_overflow = 1;
+    if (TIM10->SR & TIM_SR_UIF)
+    {
+        TIM10->SR &= ~TIM_SR_UIF;
+    }
 }
 
-
 /****************************************************
-*					TIM2 functions 					*
-*													*
-****************************************************/
-
+ *					TIM2 functions 					*
+ *													*
+ ****************************************************/
 
 /**
  * @author SurgeExperiments
@@ -129,28 +124,27 @@ void TIM1_UP_TIM10_IRQHandler(void)
  */
 void tim2_setup_for_interrupt_timing(void)
 {
-	/* enable the clock for TIM2 (bit 0) */
-	RCC->APB1ENR |=  RCC_APB1ENR_TIM2EN;
-	
-	/* equation: 
-	 * update_event=sysClock/((psc+1)*(arr+1)*(RCR+1)
-	 * prescaler=99, arr=999, gives: 10^8 / ((99+1)*(999+1)) == 1000
-	 */ 
-	
-	TIM2->PSC = 99;
-	TIM2->ARR = 999; 
-	
-	/* enable uie interrupt (TIM_DIER_UIE) */
-	TIM2->DIER  = (1U << 0);
-	
-	/* Reload the prescaler immediately */
-	TIM2->EGR = 1; 
-	TIM2->CR1 = TIM_CR1_CEN;
-	
-	/* Set the prescaler and arr to generate an overflow event every 1ms */
-	NVIC_EnableIRQ(TIM2_IRQn);
-}
+    /* enable the clock for TIM2 (bit 0) */
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 
+    /* equation:
+     * update_event=sysClock/((psc+1)*(arr+1)*(RCR+1)
+     * prescaler=99, arr=999, gives: 10^8 / ((99+1)*(999+1)) == 1000
+     */
+
+    TIM2->PSC = 99;
+    TIM2->ARR = 999;
+
+    /* enable uie interrupt (TIM_DIER_UIE) */
+    TIM2->DIER = (1U << 0);
+
+    /* Reload the prescaler immediately */
+    TIM2->EGR = 1;
+    TIM2->CR1 = TIM_CR1_CEN;
+
+    /* Set the prescaler and arr to generate an overflow event every 1ms */
+    NVIC_EnableIRQ(TIM2_IRQn);
+}
 
 /**
  * @author SurgeExperiments
@@ -158,15 +152,14 @@ void tim2_setup_for_interrupt_timing(void)
  */
 void tim2_setup_for_delay_count_ms(void)
 {
-	RCC->APB1ENR |=  RCC_APB1ENR_TIM2EN;
-	
-	TIM2->PSC = 49999;
-	
-	/* Reload the prescaler immediately */
-	TIM2->EGR = 1; 
-	TIM2->CR1 = TIM_CR1_CEN;
-}
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 
+    TIM2->PSC = 49999;
+
+    /* Reload the prescaler immediately */
+    TIM2->EGR = 1;
+    TIM2->CR1 = TIM_CR1_CEN;
+}
 
 /**
  * @author SurgeExperiments
@@ -174,12 +167,11 @@ void tim2_setup_for_delay_count_ms(void)
  */
 void tim2_setup_for_delay_count_us(void)
 {
-	RCC->APB1ENR |=  RCC_APB1ENR_TIM2EN;
-	TIM2->PSC = 49;	
-	TIM2->EGR = 1; 
-	TIM2->CR1 = TIM_CR1_CEN;
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    TIM2->PSC = 49;
+    TIM2->EGR = 1;
+    TIM2->CR1 = TIM_CR1_CEN;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -187,9 +179,8 @@ void tim2_setup_for_delay_count_us(void)
  */
 void tim2_reset_count(void)
 {
-	TIM2->CNT = 0; 
+    TIM2->CNT = 0;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -197,9 +188,8 @@ void tim2_reset_count(void)
  */
 uint32_t tim2_read_count(void)
 {
-	return TIM2->CNT; 
+    return TIM2->CNT;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -210,13 +200,13 @@ uint32_t tim2_read_count(void)
  */
 void tim2_delay_ms(uint32_t ms_to_delay)
 {
-	tim2_setup_for_delay_count_ms(); 
-	while((TIM2->CNT) < ms_to_delay);
+    tim2_setup_for_delay_count_ms();
+    while ((TIM2->CNT) < ms_to_delay)
+        ;
 
-	/* Disable the timer afterwards */
-	TIM2->CR1 &= ~TIM_CR1_CEN;
+    /* Disable the timer afterwards */
+    TIM2->CR1 &= ~TIM_CR1_CEN;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -224,19 +214,19 @@ void tim2_delay_ms(uint32_t ms_to_delay)
  *
  * 		  If the timer went beyond 65.5ms
  * 		  tim2_delaycount_err_overflow will be set to 1.
- * 
+ *
  * 		  This function also disables TIM2 afterwards,
  * 		  don't use it while using TIM2 for something else
  */
 void tim2_delay_us(uint32_t us_to_delay)
 {
-	tim2_setup_for_delay_count_us(); 
-	while((TIM2->CNT) < us_to_delay);
+    tim2_setup_for_delay_count_us();
+    while ((TIM2->CNT) < us_to_delay)
+        ;
 
-	/* Disable the timer afterwards */
-	TIM2->CR1 &= ~TIM_CR1_CEN;
+    /* Disable the timer afterwards */
+    TIM2->CR1 &= ~TIM_CR1_CEN;
 }
-
 
 /**************************
  * INTERRUPT-BASED TIMERS *
@@ -248,9 +238,8 @@ void tim2_delay_us(uint32_t us_to_delay)
  */
 uint32_t tim2_ms_passed(void)
 {
-	return tim2_ms_since_startup;
+    return tim2_ms_since_startup;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -258,33 +247,32 @@ uint32_t tim2_ms_passed(void)
  */
 uint32_t tim2_us_passed(void)
 {
-	/*
-	 * Bit 0 UIF: Update interrupt flag ? This bit is set by hardware on an update event.
-	 * It is cleared by software. 0: No update occurred. 1: Update interrupt pending.
-	 * This bit is set by hardware when the registers are updated: ? At overflow or
-	 * underflow (for TIM2 to TIM5) and if UDIS=0 in the TIMx_CR1 register.
-	 */
-	tim2_timer_interrupt_ran = 0; 
-	uint32_t us_passed =  tim2_ms_since_startup*1000;
-	uint32_t current_reg_count = (uint32_t)TIM2->CNT; 
-	
-	/* Millis updated in between, must reupdate */
-	if(tim2_timer_interrupt_ran == 1) {
-		us_passed =  tim2_ms_since_startup*1000;
-		/* Since it did an overflow, we need this to be the new (and lower) value */
-		current_reg_count = (uint32_t)TIM2->CNT; 
-	}
-	
-	/* 1000 timer ticks per millis means one per micro */
-	return us_passed + current_reg_count;
+    /*
+     * Bit 0 UIF: Update interrupt flag ? This bit is set by hardware on an update event.
+     * It is cleared by software. 0: No update occurred. 1: Update interrupt pending.
+     * This bit is set by hardware when the registers are updated: ? At overflow or
+     * underflow (for TIM2 to TIM5) and if UDIS=0 in the TIMx_CR1 register.
+     */
+    tim2_timer_interrupt_ran = 0;
+    uint32_t us_passed = tim2_ms_since_startup * 1000;
+    uint32_t current_reg_count = (uint32_t)TIM2->CNT;
+
+    /* Millis updated in between, must reupdate */
+    if (tim2_timer_interrupt_ran == 1)
+    {
+        us_passed = tim2_ms_since_startup * 1000;
+        /* Since it did an overflow, we need this to be the new (and lower) value */
+        current_reg_count = (uint32_t)TIM2->CNT;
+    }
+
+    /* 1000 timer ticks per millis means one per micro */
+    return us_passed + current_reg_count;
 }
 
-
 /*************************************
-*			TIM9 functions 			 *
-*									 *
-*************************************/
-
+ *			TIM9 functions 			 *
+ *									 *
+ *************************************/
 
 /**
  * @author SurgeExperiments
@@ -295,24 +283,23 @@ uint32_t tim2_us_passed(void)
  */
 void tim9_setup_for_interrupt_timing(void)
 {
-	/* enable the clock for TIM2 (bit 0) */
-	RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
-	
-	/* on another bus than TIM2, needs a different prescaler */
-	TIM9->PSC = 199;
-	TIM9->ARR = 999; 
+    /* enable the clock for TIM2 (bit 0) */
+    RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
 
-	/* enable uie interrupt */
-	TIM9->DIER  = (1U << 0);
+    /* on another bus than TIM2, needs a different prescaler */
+    TIM9->PSC = 199;
+    TIM9->ARR = 999;
 
-	/* bit 2 urs: 1: Only counter overflow generates an update interrupt if enabled. */
-	TIM9->CR1 |= (1U << 2);
-	TIM9->CR1 |= TIM_CR1_CEN;
-	
-	/* Set the prescaler and arr to generate an overflow event every 1ms (or 0.5ms if needed) */
-	NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
+    /* enable uie interrupt */
+    TIM9->DIER = (1U << 0);
+
+    /* bit 2 urs: 1: Only counter overflow generates an update interrupt if enabled. */
+    TIM9->CR1 |= (1U << 2);
+    TIM9->CR1 |= TIM_CR1_CEN;
+
+    /* Set the prescaler and arr to generate an overflow event every 1ms (or 0.5ms if needed) */
+    NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
 }
-
 
 /**
  * @author SurgeExperiments
@@ -324,16 +311,15 @@ void tim9_setup_for_interrupt_timing(void)
  */
 void tim9_setup_for_delay_count_ms(void)
 {
-	RCC->APB2ENR |=  RCC_APB2ENR_TIM9EN;
-	
-	/* This should have been 99999 for 1 count per ms, but the reg can only go to 65535 */
-	TIM9->PSC = 49999;
-	
-	TIM9->EGR = 1; 
-	TIM9->CNT = 0; // santity check
-	TIM9->CR1 = TIM_CR1_CEN;
-}
+    RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
 
+    /* This should have been 99999 for 1 count per ms, but the reg can only go to 65535 */
+    TIM9->PSC = 49999;
+
+    TIM9->EGR = 1;
+    TIM9->CNT = 0; // santity check
+    TIM9->CR1 = TIM_CR1_CEN;
+}
 
 /**
  * @author SurgeExperiments
@@ -341,17 +327,16 @@ void tim9_setup_for_delay_count_ms(void)
  */
 void tim9_setup_for_delay_count_us(void)
 {
-	/* enable the clock for TIM2 (bit 0) */
-	RCC->APB2ENR |=  RCC_APB2ENR_TIM9EN;
-	
-	/* one count per micro, will overflow at 65.535 millis */
-	TIM9->PSC = 99;
-	
-	TIM9->EGR = 1; 
-	TIM9->CNT = 0;
-	TIM9->CR1 = TIM_CR1_CEN;
-}
+    /* enable the clock for TIM2 (bit 0) */
+    RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
 
+    /* one count per micro, will overflow at 65.535 millis */
+    TIM9->PSC = 99;
+
+    TIM9->EGR = 1;
+    TIM9->CNT = 0;
+    TIM9->CR1 = TIM_CR1_CEN;
+}
 
 /**
  * @author SurgeExperiments
@@ -360,26 +345,25 @@ void tim9_setup_for_delay_count_us(void)
  */
 void tim9_setup_delay_count_us_int_warn(void)
 {
-	/* enable the clock for TIM2 (bit 0) */
-	RCC->APB2ENR |=  RCC_APB2ENR_TIM9EN;
-	
-	/* one count per micro, will overflow at 65.535 millis */
-	TIM9->PSC = 99;
-	
-	TIM9->DIER  = (1U << 0);
+    /* enable the clock for TIM2 (bit 0) */
+    RCC->APB2ENR |= RCC_APB2ENR_TIM9EN;
 
-	/* bit 2 urs: 1: Only counter overflow generates an update interrupt if enabled. */
-	TIM9->CR1 |= (1U << 2);
-	
-	TIM9->EGR = 1; 
-	TIM9->CNT = 0;
-	/* Enable timer */
-	TIM9->CR1 = TIM_CR1_CEN;
-	
-	/* If this interrupt happens the counter had an overflow, ie critical error */
-	NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
+    /* one count per micro, will overflow at 65.535 millis */
+    TIM9->PSC = 99;
+
+    TIM9->DIER = (1U << 0);
+
+    /* bit 2 urs: 1: Only counter overflow generates an update interrupt if enabled. */
+    TIM9->CR1 |= (1U << 2);
+
+    TIM9->EGR = 1;
+    TIM9->CNT = 0;
+    /* Enable timer */
+    TIM9->CR1 = TIM_CR1_CEN;
+
+    /* If this interrupt happens the counter had an overflow, ie critical error */
+    NVIC_EnableIRQ(TIM1_BRK_TIM9_IRQn);
 }
-
 
 /**
  * @author SurgeExperiments
@@ -387,9 +371,8 @@ void tim9_setup_delay_count_us_int_warn(void)
  */
 void tim9_reset_count(void)
 {
-	TIM9->CNT = 0; 
+    TIM9->CNT = 0;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -397,9 +380,8 @@ void tim9_reset_count(void)
  */
 uint32_t tim9_read_count(void)
 {
-	return TIM9->CNT; 
+    return TIM9->CNT;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -410,15 +392,15 @@ uint32_t tim9_read_count(void)
  */
 void tim9_delay_ms(uint32_t ms_to_delay)
 {
-	tim9_setup_for_delay_count_ms();
+    tim9_setup_for_delay_count_ms();
 
-	/* 100mhz prescaled by 50k means 2k counts / sec */
-	while((TIM9->CNT) < ms_to_delay*2);
+    /* 100mhz prescaled by 50k means 2k counts / sec */
+    while ((TIM9->CNT) < ms_to_delay * 2)
+        ;
 
-	/* Disable the timer afterwards */
-	TIM9->CR1 &= ~TIM_CR1_CEN;
+    /* Disable the timer afterwards */
+    TIM9->CR1 &= ~TIM_CR1_CEN;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -426,17 +408,15 @@ void tim9_delay_ms(uint32_t ms_to_delay)
  */
 void tim9_delay_us(uint32_t us_to_delay)
 {
-	tim9_setup_for_delay_count_us();
-	while((TIM9->CNT) < us_to_delay);
-	TIM9->CR1 &= ~TIM_CR1_CEN;
+    tim9_setup_for_delay_count_us();
+    while ((TIM9->CNT) < us_to_delay)
+        ;
+    TIM9->CR1 &= ~TIM_CR1_CEN;
 }
-
-
 
 /**************************
  * INTERRUPT-BASED TIMERS *
  *************************/
-
 
 /**
  * @author SurgeExperiments
@@ -444,9 +424,8 @@ void tim9_delay_us(uint32_t us_to_delay)
  */
 uint32_t tim9_ms_passed(void)
 {
-	return tim9_ms_since_startup;
+    return tim9_ms_since_startup;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -454,34 +433,33 @@ uint32_t tim9_ms_passed(void)
  */
 uint32_t tim9_us_passed(void)
 {
-	
-	/*
-	 * Bit 0 UIF: Update interrupt flag ? This bit is set by hardware on an update event.
-	 * It is cleared by software. 0: No update occurred. 1: Update interrupt pending.
-	 * This bit is set by hardware when the registers are updated: ? At overflow or
-	 * underflow (for TIM2 to TIM5) and if UDIS=0 in the TIMx_CR1 register.
-	 */
-	tim9_timer_interrupt_ran = 0; 
-	uint32_t us_passed =  tim9_ms_since_startup;
-	uint32_t current_reg_count = TIM9->CNT; 
-	
-	/* Millis updated in between, must reupdate */
-	if(tim9_timer_interrupt_ran == 1) {
-		us_passed += 1; 
-		/* Since it did an overflow, we need this to be the new (and lower) value */
-		current_reg_count = TIM9->CNT; 
-	}
 
-	/* 1000 timer ticks per millis means one per micro */
-	return us_passed*1000 + current_reg_count;
+    /*
+     * Bit 0 UIF: Update interrupt flag ? This bit is set by hardware on an update event.
+     * It is cleared by software. 0: No update occurred. 1: Update interrupt pending.
+     * This bit is set by hardware when the registers are updated: ? At overflow or
+     * underflow (for TIM2 to TIM5) and if UDIS=0 in the TIMx_CR1 register.
+     */
+    tim9_timer_interrupt_ran = 0;
+    uint32_t us_passed = tim9_ms_since_startup;
+    uint32_t current_reg_count = TIM9->CNT;
+
+    /* Millis updated in between, must reupdate */
+    if (tim9_timer_interrupt_ran == 1)
+    {
+        us_passed += 1;
+        /* Since it did an overflow, we need this to be the new (and lower) value */
+        current_reg_count = TIM9->CNT;
+    }
+
+    /* 1000 timer ticks per millis means one per micro */
+    return us_passed * 1000 + current_reg_count;
 }
 
-
 /********************************************************
-*					TIM10 functions 					*
-*											  			*
-********************************************************/
-
+ *					TIM10 functions 					*
+ *											  			*
+ ********************************************************/
 
 /**
  * @author SurgeExperiments
@@ -494,17 +472,16 @@ uint32_t tim9_us_passed(void)
  */
 void tim10_setup_for_delay_count_ms(void)
 {
-	/* enable the clock for TIM2 (bit 0) */
-	RCC->APB2ENR |=  RCC_APB2ENR_TIM10EN;
-	
-	/* This should have been 99999 for 1 count per ms, but the reg can only go to 65535 */
-	TIM10->PSC = 49999;
-	
-	TIM10->EGR = 1; 
-	TIM10->CNT = 0;
-	TIM10->CR1 = TIM_CR1_CEN;
-}
+    /* enable the clock for TIM2 (bit 0) */
+    RCC->APB2ENR |= RCC_APB2ENR_TIM10EN;
 
+    /* This should have been 99999 for 1 count per ms, but the reg can only go to 65535 */
+    TIM10->PSC = 49999;
+
+    TIM10->EGR = 1;
+    TIM10->CNT = 0;
+    TIM10->CR1 = TIM_CR1_CEN;
+}
 
 /**
  * @author SurgeExperiments
@@ -512,16 +489,15 @@ void tim10_setup_for_delay_count_ms(void)
  */
 void tim10_setup_for_delay_count_us(void)
 {
-	RCC->APB2ENR |=  RCC_APB2ENR_TIM10EN;
-	
-	/* one count per micro, will overflow at 65.535 millis */
-	TIM10->PSC = 99;
-	
-	TIM10->EGR = 1; 
-	TIM10->CNT = 0;
-	TIM10->CR1 = TIM_CR1_CEN;
-}
+    RCC->APB2ENR |= RCC_APB2ENR_TIM10EN;
 
+    /* one count per micro, will overflow at 65.535 millis */
+    TIM10->PSC = 99;
+
+    TIM10->EGR = 1;
+    TIM10->CNT = 0;
+    TIM10->CR1 = TIM_CR1_CEN;
+}
 
 /**
  * @author SurgeExperiments
@@ -531,23 +507,22 @@ void tim10_setup_for_delay_count_us(void)
  */
 void tim10_setup_delay_count_us_int_warn(void)
 {
-	RCC->APB2ENR |=  RCC_APB2ENR_TIM10EN;
-	
-	/* one count per micro, will overflow at 65.535 millis */
-	TIM10->PSC = 99;
-	
-	TIM10->DIER  = (1U << 0); // | (1U << 2);
+    RCC->APB2ENR |= RCC_APB2ENR_TIM10EN;
 
-	/* bit 2 urs: 1: Only counter overflow generates an update interrupt if enabled. */
-	TIM10->CR1 |= (1U << 2);
-	
-	TIM10->EGR = 1; 
-	TIM10->CNT = 0;
-	TIM10->CR1 = TIM_CR1_CEN;
-	
-	NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
+    /* one count per micro, will overflow at 65.535 millis */
+    TIM10->PSC = 99;
+
+    TIM10->DIER = (1U << 0); // | (1U << 2);
+
+    /* bit 2 urs: 1: Only counter overflow generates an update interrupt if enabled. */
+    TIM10->CR1 |= (1U << 2);
+
+    TIM10->EGR = 1;
+    TIM10->CNT = 0;
+    TIM10->CR1 = TIM_CR1_CEN;
+
+    NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
 }
-
 
 /**
  * @author SurgeExperiments
@@ -555,9 +530,8 @@ void tim10_setup_delay_count_us_int_warn(void)
  */
 void tim10_reset_count(void)
 {
-	TIM10->CNT = 0; 
+    TIM10->CNT = 0;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -565,9 +539,8 @@ void tim10_reset_count(void)
  */
 uint32_t tim10_read_count(void)
 {
-	return TIM10->CNT; 
+    return TIM10->CNT;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -578,13 +551,13 @@ uint32_t tim10_read_count(void)
  */
 void tim10_delay_ms(uint32_t ms_to_delay)
 {
-	tim10_setup_for_delay_count_ms();
+    tim10_setup_for_delay_count_ms();
 
-	/* 100mhz prescaled by 50k means 2k counts / sec */
-	while((TIM10->CNT) < ms_to_delay*2);
-	TIM10->CR1 &= ~TIM_CR1_CEN;
+    /* 100mhz prescaled by 50k means 2k counts / sec */
+    while ((TIM10->CNT) < ms_to_delay * 2)
+        ;
+    TIM10->CR1 &= ~TIM_CR1_CEN;
 }
-
 
 /**
  * @author SurgeExperiments
@@ -595,18 +568,15 @@ void tim10_delay_ms(uint32_t ms_to_delay)
  */
 void tim10_delay_us(uint32_t us_to_delay)
 {
-	tim10_setup_for_delay_count_us(); 
-	while((TIM10->CNT) < us_to_delay);
-	TIM10->CR1 &= ~TIM_CR1_CEN;
+    tim10_setup_for_delay_count_us();
+    while ((TIM10->CNT) < us_to_delay)
+        ;
+    TIM10->CR1 &= ~TIM_CR1_CEN;
 }
-
-
-
 
 /****************
  * OTHER TIMERS *
  ***************/
-
 
 /**
  * Call at least every 2^32 cycles (every 59.6 seconds @ 72 MHz).
@@ -615,7 +585,7 @@ void tim10_delay_us(uint32_t us_to_delay)
 
 /*
 uint64_t GetCycleCount64(void) {
-	
+
   last_cycle_count_64 += DWT->CYCCNT - (uint32_t)(last_cycle_count_64);
   return last_cycle_count_64;
 }
@@ -626,19 +596,3 @@ uint64_t getTimeViaCycles(void) {
   return last_cycle_count_64/100;
 }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

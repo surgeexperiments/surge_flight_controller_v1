@@ -1,7 +1,5 @@
 
 
-
-
 #ifndef RUNNING_MODE_H_
 #define RUNNING_MODE_H_
 

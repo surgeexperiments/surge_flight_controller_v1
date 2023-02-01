@@ -11,4 +11,3 @@
  * @param battery_voltage a float variable you want to store the battery voltage inside.
  */
 #define LOAD_BATTERY_VOLTAGE(battery_voltage) //(battery_voltage = (analog_read(0) + 65) * 1.2317);
-

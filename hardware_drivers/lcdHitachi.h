@@ -1,7 +1,6 @@
 /**
  * @author SurgeExperiments
- */ 
-
+ */
 
 #ifndef LCDHITACHI_H_
 #define LCDHITACHI_H_
@@ -77,4 +76,3 @@ void lcd_set_backlight(lcdVariables_st *lcd_vars, uint8_t brightness);
 void lcd_set_cursor(lcdVariables_st *lcd_vars, uint8_t col, uint8_t row);
 
 #endif /* LCDHITACHI_H_ */
-

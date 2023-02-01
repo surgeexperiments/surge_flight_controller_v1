@@ -41,9 +41,8 @@ void tim10_delay_ms(uint32_t millis_to_delay);
 void tim10_delay_us(uint32_t micros_to_delay);
 
 // Experimental and untested (found online)
-//uint64_t GetCycleCount64(void);
-//uint64_t getTimeViaCycles(void);
-
+// uint64_t GetCycleCount64(void);
+// uint64_t getTimeViaCycles(void);
 
 /* INFO:
  *

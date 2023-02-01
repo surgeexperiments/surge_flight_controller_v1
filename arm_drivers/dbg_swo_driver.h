@@ -9,4 +9,3 @@
 int print_str_to_dbg_port(char *my_string);
 
 #endif /* DBG_SWO_DRIVER_ */
-

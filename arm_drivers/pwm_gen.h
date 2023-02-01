@@ -14,7 +14,7 @@
 void enable_pwm_timer_2(uint8_t prescalerValue, uint16_t pwmCycleLength);
 void enable_pwm_timer_3(uint8_t prescaler_value, uint16_t pwm_cycle_length);
 
-void set_pwm_freq(TIM_TypeDef* TIMx,
+void set_pwm_freq(TIM_TypeDef *TIMx,
                   uint16_t channel1,
                   uint16_t channel2,
                   uint16_t channel3,

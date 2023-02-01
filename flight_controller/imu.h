@@ -5,7 +5,6 @@
  *	@brief This file contains the defines and prototypes for using the IMU
  */
 
-
 #ifndef IMU_H_
 #define IMU_H_
 
@@ -28,9 +27,9 @@
 */
 
 /* CAM */
-#define ROLL_AXIS_REVERSE	-1
-#define PITCH_AXIS_REVERSE  1
-#define YAW_AXIS_REVERSE   -1
+#define ROLL_AXIS_REVERSE -1
+#define PITCH_AXIS_REVERSE 1
+#define YAW_AXIS_REVERSE -1
 
 /* postfix with _ to avoid redef error */
 #define M_PI_ 3.14159265f
@@ -39,7 +38,7 @@ uint8_t imu_initialize_hardware(imuSelector_et imu_selector,
                                 gyroData_st *gyro_offsets,
                                 accelData_st *accel_offsets);
 
-void gyro_compensation(const gyroData_st gyro_offsets, gyroData_st *gyro_output); 
+void gyro_compensation(const gyroData_st gyro_offsets, gyroData_st *gyro_output);
 uint8_t imu_fetch_filtered_gyro_data(imuSelector_et gyro_selector, imuDataCollection_st *imu_data);
 uint8_t imu_fetch_filtered_data(imuSelector_et imu_selector, imuDataCollection_st *imu_data);
 
@@ -112,4 +111,3 @@ float imu_mahony_get_pitch_radians(mahonyVariables_st *mahoney_vars);
 float imu_mahony_get_yaw_radians(mahonyVariables_st *mahoney_vars);
 
 #endif /* IMU_H_ */
-

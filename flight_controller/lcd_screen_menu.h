@@ -5,7 +5,6 @@
  *	@brief This file contains the prototypes for using the lcd screen meny
  */
 
-
 #ifndef SCREENMENU_H_
 #define SCREENMENU_H_
 
@@ -37,6 +36,5 @@ void lcd_menu_run_flight_modes(lcdVariables_st *lcd_vars,
                                menuStrings_st *menu_data,
                                uint8_t *level_mode_index,
                                buttonHandling_st *button_values);
-
 
 #endif /* SCREENMENU_H_ */

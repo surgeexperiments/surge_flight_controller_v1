@@ -11,7 +11,6 @@
 #include "rx_control.h"
 #include "../arm_drivers/pwm_read.h"
 
-
 /**
  * @author SurgeExperiments
  * @brief function that sets up the PWM read capability on 4 GPIO pins
@@ -21,12 +20,10 @@
  * will activate. You can also change which pins are coupled to a timer in
  * that file.
  */
-void rx_setup_timers_for_receiver_read(void){
-	init_pwm_read_timer_1(); 
-	init_pwm_read_timer_3(); 
-	init_pwm_read_timer_4(); 
-	init_pwm_read_timer_5(); 
+void rx_setup_timers_for_receiver_read(void)
+{
+    init_pwm_read_timer_1();
+    init_pwm_read_timer_3();
+    init_pwm_read_timer_4();
+    init_pwm_read_timer_5();
 }
-
-
-
