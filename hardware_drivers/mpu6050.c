@@ -37,10 +37,10 @@ uint8_t g_mpu6050_result_buffer[14];
  */
 char g_mpu6050_data_buffer_print[40];
 
-/****************************************************
- *					DMA FUNCTIONS					*
- *													*
- ****************************************************/
+/*******************************
+ *        DMA FUNCTIONS        *
+ *                             *
+ ******************************/
 
 /**
  * NOTE: Commented out because both the LSM303 and the MPU6050
