@@ -1,13 +1,13 @@
 /**
  * @brief This is a very basic debug method. All vars are
  *        titled the same as in main.h/c and you can
- * 		  import this file to activate debug macros.
+ *        import this file to activate debug macros.
  *
- * 		  (since this relies on var naming it's quite
- * 		   fragile, but for its intended transient
- * 		   purpose it's ok)
+ *        (since this relies on var naming it's quite
+ *        fragile, but for its intended transient
+ *        purpose it's ok)
  *
- * 		  NOTE: remember to activate the right defines to use macros.
+ *        NOTE: remember to activate the right defines to use macros.
  */
 
 #ifndef DEBUG_MACROS_FLIGHT_LOOP_H_

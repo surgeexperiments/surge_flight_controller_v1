@@ -3,7 +3,7 @@
  * @author SurgeExperiments
  *
  * NOTE: Have taken out multiple structs used for debugging
- * 		 and manual testing. They were over-complicating things.
+ *       and manual testing. They were over-complicating things.
  */
 
 #ifndef ENUMS_H_

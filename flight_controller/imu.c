@@ -3,21 +3,21 @@
  * @author SurgeExperiments
  *
  * @brief File containing functions to initialize and get data from various sensors.
- * 		  Also contains sensor fusion algorithms and Kalman filter.
- * 		  These are found online and customized
- * 		  to work with the data structures in this program.
+ *        Also contains sensor fusion algorithms and Kalman filter.
+ *        These are found online and customized
+ *        to work with the data structures in this program.
  *
  *
- * 		  The IMU drivers handles setup, calibration and getting
- * 		  output data into the data structures for gyro
- * 		  and accel data in DMA or normal mode (incl subtracting calibration data).
+ *        The IMU drivers handles setup, calibration and getting
+ *        output data into the data structures for gyro
+ *        and accel data in DMA or normal mode (incl subtracting calibration data).
  *
- * 		  This module orchestrates different IMU-combinations and handles
- * 		  higher level data-manipulation such as axis reversing,
- * 		  auto-levelling stuff, drift-elimination and so on.
+ *        This module orchestrates different IMU-combinations and handles
+ *        higher level data-manipulation such as axis reversing,
+ *        auto-levelling stuff, drift-elimination and so on.
  *
- * 		  Set the correct IMU axis reversals in imu.h
- * 		  (depending on how the IMU is mounted on the drone)
+ *        Set the correct IMU axis reversals in imu.h
+ *        (depending on how the IMU is mounted on the drone)
  */
 
 #include <stdlib.h>
@@ -209,8 +209,8 @@ uint8_t imu_fetch_filtered_gyro_data(imuSelector_et gyro_selector, imuDataCollec
  *
  * @param[in] IMUSelector selects which type of data and by which type of sensor
  * @param[out] IMU_data self explanatory
- *				IMPORTANT: the data buffer must be at least 14 bytes long!
- *						   (or you'll corrupt data somewhere)
+ *             IMPORTANT: the data buffer must be at least 14 bytes long!
+ *                        (or you'll corrupt data somewhere)
  *
  * @retval 0 on success, 1 on error. An error will be caused by a sensor read-error.
  */
@@ -379,14 +379,14 @@ void madgwick_imu_scale(accelData_st *accel_raw,
 
 /**
  * @brief computes the quaternions that represents the current position in space
- *		  NOTE: The Madgewick sensor fusion algorithm requires up to a few seconds
- *				to stabilize it's measurements. Before they have converged they are
- *				unreliable.
+ *        NOTE: The Madgewick sensor fusion algorithm requires up to a few seconds
+ *              to stabilize it's measurements. Before they have converged they are
+ *              unreliable.
  *
  * @param a[xyz] accelerometer input xyz
  * @param g[xyz] gyro input xyz
  * @param deltat delta time since the last call of this func in microseconds.
- *				 Set to 0 on first call (this will be while waiting for convergence of values)
+ *               Set to 0 on first call (this will be while waiting for convergence of values)
  * @param[out] myMadgewickVars See structs.h for struct definitions.
  */
 void MadgwickQuaternionUpdate(float ax,
@@ -494,11 +494,11 @@ void MadgwickQuaternionUpdate(float ax,
 
 /**
  * @brief get roll/pitch/yaw from the array q from an instance
- * 		  of a MadgewickQuaternionVariables struct.
+ *        of a MadgewickQuaternionVariables struct.
  *
  * NOTE: this doesn't prevent gimbal-lock! A better alternative
- * 		 is to run the drone positioning on the actual computed
- * 	 	 quaternions instead of using pitch/roll/yaw.
+ *       is to run the drone positioning on the actual computed
+ *       quaternions instead of using pitch/roll/yaw.
  *
  * @param[in] q quaternion struct from the MadgewickQuaternionVariables struct
  * @param[out] imu_orientation_ struct being filled with the computed angles
@@ -614,9 +614,9 @@ void imu_init_kalman_filter(kalmanVariables_st *kalman_variables_x,
 /**
  * @brief run the kalman filter and compute the pitch and roll angles of the drone.
  *
- * 		  http://www.freescale.com/files/sensors/doc/app_note/AN3461.pdf
+ *        http://www.freescale.com/files/sensors/doc/app_note/AN3461.pdf
  *
- * 		  TODO: test implementation more. Flights are a bit glitchy.
+ *        TODO: test implementation more. Flights are a bit glitchy.
  *
  * @param dt delta time since last function call in microseconds
  */
@@ -900,8 +900,8 @@ void mahony_update(mahonyVariables_st *mahoney_vars,
 //-------------------------------------------------------------------------------------------
 
 /** @brief NOTE: requires deg/sec for gyro
- *			     This algorithm needs a few seconds to converge to stable measurements before being reliable.
- *				 (just like Madgewick)
+ *               This algorithm needs a few seconds to converge to stable measurements before being reliable.
+ *               (just like Madgewick)
  */
 void imu_mahony_update(mahonyVariables_st *mahoney_vars, float gx, float gy, float gz, float ax, float ay, float az)
 {

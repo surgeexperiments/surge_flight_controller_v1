@@ -2,15 +2,15 @@
  *	@file pid.C
  *	@author SurgeExperiments
  *
- *	@brief This file contains functions for using the PID controller.
+ *  @brief This file contains functions for using the PID controller.
  *
- *	TPA mode:
- *	- A mode that multiplies the P, I and D gains over a certain throttle value by a multiplier.
- *	- This way you can reduce PID gains when doing high throttle, allowing U to use things like a higher
- *	  P gain and not get oscillations on high throttle levels
+ *  TPA mode:
+ *  - A mode that multiplies the P, I and D gains over a certain throttle value by a multiplier.
+ *  - This way you can reduce PID gains when doing high throttle, allowing U to use things like a higher
+ *    P gain and not get oscillations on high throttle levels
  *
  * TODO: pid_init_controller_structs() has some hard coded angle values.
- * 		 Move to defines.
+ *       Move to defines.
  */
 
 #include "pid.h"
@@ -28,7 +28,7 @@ static float current_error;
  * @brief macro that does PID calculations for angle-mode.
  *
  * @param[out] PID struct of type PID_storage containing PID values. Stores output result.
- * 			   This param must be a global in this file.
+ *             This param must be a global in this file.
  * @param[in] ACTUAL_ANGLE the angle the drone has for a for an axis
  * @param[in] DESIRED_ANGLE the desired angle the user wants for an axis
  */
@@ -53,7 +53,7 @@ static float current_error;
  * @brief macro that does PID calculations for gyro-mode
  *
  * @param[out] PID struct of type PID_storage containing PID values. Stores output result.
- * 			   This param must be a global in this file.
+ *             This param must be a global in this file.
  * @param[in] GYRO_DEG_SECOND the actual angular speed the drone has in one axis
  * @param[in] PID_SETPOINT the desired angular speed the user want the drone to have
  */
@@ -80,11 +80,11 @@ static float current_error;
  * NOTE: this might b combined with the CALCULATE_PID_AXIS() later
  *
  * @param[out] PID struct of type PID_storage containing PID values. Stores output result.
- * 			   This param must be a global in this file.
+ *             This param must be a global in this file.
  * @param[in] GYRO_DEG_SECOND the actual angular speed the drone has in one axis
  * @param[in] PID_SETPOINT the desired angular speed the user want the drone to have
  * @param[in] TPA_MULTIPLIER the multiplier to multiply the gains with, set by the user, and
- * 			  usually for high throttle values
+ *            usually for high throttle values
  */
 #define CALCULATE_PID_AXIS_TPA(PID, GYRO_DEG_SECOND, PID_SETPOINT, TPA_MULTIPLIER)                   \
     current_error = GYRO_DEG_SECOND - PID_SETPOINT;                                                  \
@@ -179,8 +179,8 @@ void pid_init_controller_structs(pidStorage_st *roll,
  * values to mess up another takeoff.
  *
  * TODO: Set this to auto-trigger upon any landing, even in acro mode
- *	     (this does trigger on a controller-reset, but that can be forgotten.
-         Use a GPIO triggered interrupt to force this)
+ *       (this does trigger on a controller-reset, but that can be forgotten.
+ *       Use a GPIO triggered interrupt to force this)
  */
 void pid_reset(void)
 {
@@ -206,7 +206,7 @@ void pid_reset(void)
 /**
  * @author SurgeExperiments
  * @brief function that transforms PWM from the RX receiver [1000-2000] to
- * 		  desired angular speed per second
+ *        desired angular speed per second
  *
  * @param[in] RX_pulse a struct of type RX_channels that contains the current pulse length from the 4 RX channels
  * @param[out] PID_data struct that contains the desired angular speed/s for pitch, roll and yaw
@@ -251,10 +251,10 @@ void rx_signals_to_rot_deg_seconds(pidData_st *pid_setpoints, rxChannels_st rx_p
 /**
  * @author SurgeExperiments
  * @brief function that takes RX controller pulses for pitch and yaw and converts them to desired angle
- * 		  in degrees for these two axes.
+ *        in degrees for these two axes.
  *
  * @param[out] pid_setpoints ptr to struct that will have its roll and pitch fields set with
- * 			   the desired angle
+ *             the desired angle
  * @param[in] RX_pulse incoming rx pulses, which we transform into desired angles
  */
 void rx_signals_to_angles(pidData_st *pid_setpoints, rxChannels_st rx_pulse)
@@ -298,7 +298,7 @@ void rx_signals_to_angles(pidData_st *pid_setpoints, rxChannels_st rx_pulse)
 /**
  * @author SurgeExperiments
  * @brief function that outputs the TPA multiplier based on the throttle PWM value from
- * 		  the RX receiver.
+ *        the RX receiver.
  *
  * @param current_throttle_pwm_value uint32_t in range [1000, 2000]
  */
@@ -321,8 +321,8 @@ static float get_tpa_multiplier(uint32_t current_throttle_pwm_value)
  * @param[in] actual_pitch_angle the actual pitch angle of the drone relative to the ground.
  * @param[in] actual_roll_angle the actual roll angle of the drone relative to the ground
  * @param[out] pid_setpoints struct that gets filled with the output from the PID controller
- * 			   These values will b translated into desired rotation and applied to the gyro-based
- * 			   PID controller later.
+ *             These values will b translated into desired rotation and applied to the gyro-based
+ *             PID controller later.
  *
  */
 void pid_calculations_angle(float actual_pitch_angle, float actual_roll_angle, pidData_st *pid_setpoints)
@@ -361,8 +361,8 @@ void run_pid_calculations(const gyroData_st gyro_deg_second,
 /**
  * @author SurgeExperiments
  * @brief Low level PID controller that operates on desired
- * 		  rotation and actual rotation (from gyro). Angle mode is eventually
- * 		  translated down to this PID controller.
+ *        rotation and actual rotation (from gyro). Angle mode is eventually
+ *        translated down to this PID controller.
  *
  * @param[in] gyro_deg_second angular speed in deg/s in pitch, roll and yaw
  * @param[in] pid_setpoints desired angluar speed in deg/s in put, roll and yaw
@@ -381,8 +381,8 @@ void pid_calculations_rotation(const gyroData_st gyro_deg_second, pidData_st pid
 /**
  * @author SurgeExperiments
  * @brief Low level PID controller that operates on desired rotation and actual rotation (from gyro). Similar to
- * 		  PID_calculationsRotation except it employs TPA for high throttle values. This tapers off the
- * 		  PID gains when the throttle is high, improving performance for acro flights (with correct PID tunings).
+ *        PID_calculationsRotation except it employs TPA for high throttle values. This tapers off the
+ *        PID gains when the throttle is high, improving performance for acro flights (with correct PID tunings).
  *
  * Remember to tune the constants used in get_tpa_multiplier() for any new drone frame.
  *

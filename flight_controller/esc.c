@@ -1,8 +1,8 @@
 /**
- *	@file esc.c
- *	@author SurgeExperiments
+ *  @file esc.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains the functions for handling the ESC's.
+ *  @brief This file contains the functions for handling the ESC's.
  */
 
 #include "../arm_drivers/pwm_gen.h"
@@ -10,7 +10,7 @@
 
 /**
  * @brief This function sets up PWM generation for ESC's on Timer2.
- * 	      Timer2 will b set to the right GPIO pins, for info check PWM_gen.c
+ *        Timer2 will b set to the right GPIO pins, for info check PWM_gen.c
  */
 void esc_init_hardware_pwm_gen(void)
 {
@@ -39,18 +39,18 @@ static void esc_pwm_voltage_comp(escOutput_st *esc_motor_output, int current_bat
  *
  * @param[in] mode one of the fly-modes described in structs.h
  * @param[in] use_voltage_compensation set to 1 if voltage compensation is to be used,
- * 									   which means the PWM is boosted a bit when the
- * 									   voltage is lower to obtain the same motor
- * 									   output as with higher voltages.
+ *                                     which means the PWM is boosted a bit when the
+ *                                     voltage is lower to obtain the same motor
+ *                                     output as with higher voltages.
  *
  *
  * @param[in] throttle the value of the throttle (usually from the RX control): 1000-2000
  * @param[in] battery_voltage self explanatory
  * @param[in] pid_output_data data from the PID controller, the low level one
- * 							  that operates on gyro data
+ *                            that operates on gyro data
  *
  * @param[out] esc_output pointer to the struct that will contain the
- * 						  computed pulse-lengths to be sent to the ESC's
+ *                        computed pulse-lengths to be sent to the ESC's
  */
 void esc_calculate_pulse_length(const flyMode_et mode,
                                 uint8_t use_voltage_compensation,
