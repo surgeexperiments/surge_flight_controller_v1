@@ -1,8 +1,8 @@
 /**
- *	@file spi_driver.c
- *	@author SurgeExperiments
+ *  @file spi_driver.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains functions to init and use SPI.
+ *  @brief This file contains functions to init and use SPI.
  */
 
 #include "spi_driver.h"
@@ -40,14 +40,14 @@ static void SPI_StructInit(SPI_InitTypeDef *SPI_InitStruct)
  * @author SurgeExperiments
  *
  * @brief init SPI for LGD20 on the STM32F411 discovery card
- * 		  NOTE: normally I would not add a sensor specific
- * 				init function in a library, however this
- * 				sensor is included on the dev board :)
+ *        NOTE: normally I would not add a sensor specific
+ *              init function in a library, however this
+ *              sensor is included on the dev board :)
  *
  * @param SPIx SPI-instance for the SPI port you wanna use
  * @param spiMode the spi mode you want to use (although
- * 				  the LGD20 lol has ONE mode rofl).
- * 				  See spi_driver.h for potential values.
+ *                the LGD20 lol has ONE mode rofl).
+ *                See spi_driver.h for potential values.
  */
 void spi_init_lgd20_devboard(SPI_TypeDef *SPIx, uint8_t spi_mode)
 {

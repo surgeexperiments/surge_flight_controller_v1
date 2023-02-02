@@ -3,21 +3,21 @@
  * @author SurgeExperiments
  *
  * @brief functions that sets up PWM-read on a timer/GPIO combination.
- * 		  Since a timer can be connected to several GPIO pins
+ *        Since a timer can be connected to several GPIO pins
  *        you can select the pin in the functions by changing defines.
- * 		  (the need for parameters here is non-existent for the time being)
+ *        (the need for parameters here is non-existent for the time being)
  *
- * 		  READING INTERRUPT DATA: The pulse-length can be read from either the global
- * 								  uint32_t variables or the RX_channels struct.
- *								  Globals are not popular, but in this case they
- * 								  are needed.
+ *        READING INTERRUPT DATA: The pulse-length can be read from either the global
+ *                                uint32_t variables or the RX_channels struct.
+ *                                Globals are not popular, but in this case they
+ *                                are needed.
  *
- * 		  Most arm interrupts (except systick) must be cleared by software,
- * 		  which is done in each interrupt handler in this module.
+ *        Most arm interrupts (except systick) must be cleared by software,
+ *        which is done in each interrupt handler in this module.
  *
- * 		  The HW timer is not influenced by these interrupts
+ *        The HW timer is not influenced by these interrupts
  *
- * 		  INTERRUPT NAMES: These have to follow an existing naming pattern.
+ *        INTERRUPT NAMES: These have to follow an existing naming pattern.
  *
  * Current setup for the flight controller:
  * - PA0: read PWM tim5_chn1: Pulse four
@@ -112,16 +112,16 @@ void TIM5_IRQHandler(void)
  * @author SurgeExperiments
  *
  * @brief: Function that sets up timer registers to read PWM
- * 		   on GPIO pins.
+ *         on GPIO pins.
  *
- * 		   IMPORTANT: Run the processor at 100mhz to get the
- * 					  correct timing.
- * 	      			  If you run the processor at other speeds
- * 					  you need to change the prescalers.
- *	      			  (see below: prescalers based on the PLL config coming)
+ *         IMPORTANT: Run the processor at 100mhz to get the
+ *                    correct timing.
+ *                    If you run the processor at other speeds
+ *                    you need to change the prescalers.
+ *                    (see below: prescalers based on the PLL config coming)
  *
- * 		   NOTE: LIB ERROR: the define for TIM_CCMR1_CC1S is erroneous,
- * 		 		 so (1U << 0) is used instead to clearify that.
+ *         NOTE: LIB ERROR: the define for TIM_CCMR1_CC1S is erroneous,
+ *                          so (1U << 0) is used instead to clearify that.
  */
 static void set_timer_registers_pwm_read(TIM_TypeDef *TIMx)
 {

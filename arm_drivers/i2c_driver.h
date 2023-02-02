@@ -1,9 +1,9 @@
 /**
- *	@file i2c_driver.h
- *	@author SurgeExperiments
+ *  @file i2c_driver.h
+ *  @author SurgeExperiments
  *
- *	@brief  This file contains prototypes for the i2c functions, function prototypes
- *			    and defines used with i2c.
+ *  @brief  This file contains prototypes for the i2c functions, function prototypes
+ *          and defines used with i2c.
  *
  *  TODO:  I've set an arbitrary # of i2c errors before i2c functions return an err code.
  *         (TIMEOUT_THRESHOLD). This number needs to be adjusted to something less arbitrary

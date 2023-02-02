@@ -1,16 +1,16 @@
 /**
- *	@file pwm_gen.c
- *	@author SurgeExperiments
+ *  @file pwm_gen.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains functions generate PWM on GPIO pins via timers.
+ *  @brief This file contains functions generate PWM on GPIO pins via timers.
  *
- *  		init with enable_pwm_timer_2/3 () and then use set_pwm_freq() to
- *  		change the frequency generated real-time.
+ *         init with enable_pwm_timer_2/3 () and then use set_pwm_freq() to
+ *         change the frequency generated real-time.
  *
  * TODO:
  * - parameterize enable_pwm_timer_3() to allow vals of
- * 	 TIMx->PSC and TIMx->ARR to b set based on
- *	 the current PLL settings (for now it only works with 100mhz)
+ *   TIMx->PSC and TIMx->ARR to b set based on
+ *   the current PLL settings (for now it only works with 100mhz)
  */
 
 #include "pwm_gen.h"
@@ -20,10 +20,10 @@
  * @author SurgeExperiments
  *
  * @brief function that sets PWM-generation for a timer.
- *		  Read the manual on the specific timer before using this.
- *		  TODO: Verify that the assumption about apb running @ sysclock/2 holds
- *				for every chip in the STM32F4 series
- * 				when generalizing this code to the entire series.
+ *        Read the manual on the specific timer before using this.
+ *        TODO: Verify that the assumption about apb running @ sysclock/2 holds
+ *              for every chip in the STM32F4 series
+ *              when generalizing this code to the entire series.
  *
  * @param TIMx CMSIS struct that represents which timer to use
  * @param prescaler_value check the reference manual.
@@ -63,17 +63,17 @@ static void enable_timer_pwm_gen(TIM_TypeDef *TIMx,
 }
 
 /**
- * @author SurgeExperiments
+ *  @author SurgeExperiments
  *
- * @brief Function to enable PWM-generation on connected GPIO pins on Timer2.
- *		  Args are described in detail in the reference manual.
+ *  @brief Function to enable PWM-generation on connected GPIO pins on Timer2.
+ *         Args are described in detail in the reference manual.
  *
- * 		 For the flight controller we use this to control the ESC's.
- * 		 NOTE: for ESC's running simonK firmware:
- * 			   use: prescalerValue: 49, pwmCycleLength: 2040 or more
+ *         For the flight controller we use this to control the ESC's.
+ *         NOTE: for ESC's running simonK firmware:
+ *               use: prescalerValue: 49, pwmCycleLength: 2040 or more
  *
- * 		TODO: Turn pin selectors for gpio_init_pins_alt_func()
- * 			  if it's needed in the future. For now it would just cause clutter.
+ *         TODO: Turn pin selectors for gpio_init_pins_alt_func()
+ *               if it's needed in the future. For now it would just cause clutter.
  *
  * @param prescaler_value Explained in the reference manual.
  * @param pwm_cycle_length Explained in the reference manual.
@@ -96,8 +96,8 @@ void enable_pwm_timer_2(uint8_t prescaler_value, uint16_t pwm_cycle_length)
 /**
  * @author SurgeExperiments
  * @brief function to set PWM-gen with Timer 3 with set values.
- * 		  (convenience function which sets the right pins for
- *         gpio_init_pins_alt_func())
+ *        (convenience function which sets the right pins for
+ *        gpio_init_pins_alt_func())
  */
 void enable_pwm_timer_3(uint8_t prescaler_value, uint16_t pwm_cycle_length)
 {

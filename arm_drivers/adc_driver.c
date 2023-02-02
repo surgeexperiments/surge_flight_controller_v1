@@ -1,8 +1,8 @@
 /**
- *	@file adc_driver.h
- *	@author SurgeExperiments
+ *  @file adc_driver.h
+ *  @author SurgeExperiments
  *
- *	@brief This file contains the ADC functions.
+ *  @brief This file contains the ADC functions.
  */
 
 #include "stm32f4xx.h"

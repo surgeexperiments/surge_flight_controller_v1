@@ -1,42 +1,42 @@
 /**
- *	@file timing_driver.c
- *	@author SurgeExperiments
+ *  @file timing_driver.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains functions for stopwatch and delay type functionality
- *		   on timers TIM2, TIM9 and TIM10.
+ *  @brief This file contains functions for stopwatch and delay type functionality
+ *         on timers TIM2, TIM9 and TIM10.
  *
  *  IMPORTANT: The "delayCount" type functions are only good for 65535 micros/65.5
- * 			   millis b4 overflow due to a 16 bit counter and 1000 counts per milli.
+ *             millis b4 overflow due to a 16 bit counter and 1000 counts per milli.
  *
- *  		   You can check if they overflowed by using the init functions
- * 			   ending with "withInterruptWarning" and checking if the global vars
- * 			   tim9_delaycount_err_overflow and tim10_delaycount_err_overflow are set to 1.
- *			   This functionality is not yet implemented in all functions (like the delay functions).
- *			   Check the functions you wanna use to see if they have this functionality implemented.
+ *             You can check if they overflowed by using the init functions
+ *             ending with "withInterruptWarning" and checking if the global vars
+ *             tim9_delaycount_err_overflow and tim10_delaycount_err_overflow are set to 1.
+ *             This functionality is not yet implemented in all functions (like the delay functions).
+ *             Check the functions you wanna use to see if they have this functionality implemented.
  *
- *			   Do NOT use the timer based on TIM9 when you use TIM1 break interrupts,
- *			   they are the same and time will be messed up!
- *			   Use the right millis_passed ect functions for the timer you initialized!
+ *             Do NOT use the timer based on TIM9 when you use TIM1 break interrupts,
+ *             they are the same and time will be messed up!
+ *             Use the right millis_passed ect functions for the timer you initialized!
  *
- *			   Don't use the interrupt-style timers at this moment, they are not tested properly!
- *			   Only use the delay type timers!
+ *             Don't use the interrupt-style timers at this moment, they are not tested properly!
+ *             Only use the delay type timers!
  *
- *  INFO:	   The nice thing about a peripheral timer is that it an independent hardware
- * 			   timer and it is always keeping count, regardless of whether interrupts are disabled or not.
+ *  INFO:      The nice thing about a peripheral timer is that it an independent hardware
+ *             timer and it is always keeping count, regardless of whether interrupts are disabled or not.
  *
- * 			   TIM2 on apb2 (50mhz)
- * 			   - For millis we prescale by 49999
- * 			   - For micros we prescale by 49
+ *             TIM2 on apb2 (50mhz)
+ *             - For millis we prescale by 49999
+ *             - For micros we prescale by 49
  *
- * 			   TIM9 is on apb1 (100mhz)
- * 			   - For millis we should have prescaled by 99999, but the 16 bit prescaler reg only
- * 				 takes 65535, so we prescale by 49999 and count 2 per millisecond
- * 				 (which makes the max delay 32ish millis before overflow)
- * 			   - For micros we prescale by 99
+ *             TIM9 is on apb1 (100mhz)
+ *             - For millis we should have prescaled by 99999, but the 16 bit prescaler reg only
+ *               takes 65535, so we prescale by 49999 and count 2 per millisecond
+ *               (which makes the max delay 32ish millis before overflow)
+ *              - For micros we prescale by 99
  *
- * 	TESTING:   Set pulseview to 500khz, 1M samples to get it right
- * 			   (if not the timing will be 2x what it really is):
- *			   pulseview is off sometimes w/salae thing
+ *  TESTING:   Set pulseview to 500khz, 1M samples to get it right
+ *             (if not the timing will be 2x what it really is):
+ *             pulseview is off sometimes w/salae thing
  */
 
 #include "timing_driver.h"
@@ -77,8 +77,8 @@ void TIM2_IRQHandler(void)
 /**
  * @author SurgeExperiments
  * @brief interrupt that us used to debug delayCount.
- * 		  If this runs your code has gone past the 65.5ms max
- * 		  limit for a timer (ie you've fucked up).
+ *        If this runs your code has gone past the 65.5ms max
+ *        limit for a timer (ie you've fucked up).
  */
 void TIM1_BRK_TIM9_IRQHandler(void)
 {
@@ -97,8 +97,8 @@ void TIM1_BRK_TIM9_IRQHandler(void)
 /**
  * @author SurgeExperiments
  * @brief interrupt that us used to debug delayCount.
- * 		  If this runs your code has gone past the 65.5ms
- * 		  max limit for a timer (ie you've fucked up)
+ *        If this runs your code has gone past the 65.5ms
+ *        max limit for a timer (ie you've fucked up)
  */
 void TIM1_UP_TIM10_IRQHandler(void)
 {
@@ -109,18 +109,18 @@ void TIM1_UP_TIM10_IRQHandler(void)
     }
 }
 
-/****************************************************
- *					TIM2 functions 					*
- *													*
- ****************************************************/
+/********************************
+ *        TIM2 functions        *
+ *                              *
+ *******************************/
 
 /**
  * @author SurgeExperiments
  * @brief function that handles setting up TIM2 for interrupt timing.
- * 		  NOTE: This function is not tested properly.
+ *        NOTE: This function is not tested properly.
  *
- * 		  This function does the math to get the frequency right
- * 		  regardless of sysclock.
+ *        This function does the math to get the frequency right
+ *        regardless of sysclock.
  */
 void tim2_setup_for_interrupt_timing(void)
 {
@@ -195,8 +195,8 @@ uint32_t tim2_read_count(void)
  * @author SurgeExperiments
  * @brief Use this when you want a delay between 0 and 65.5 seconds.
  *
- * 		  NOTE: This function disables TIM2 afterwards,
- * 				don't use it while using TIM2 for something else
+ *        NOTE: This function disables TIM2 afterwards,
+ *              don't use it while using TIM2 for something else
  */
 void tim2_delay_ms(uint32_t ms_to_delay)
 {
@@ -212,11 +212,11 @@ void tim2_delay_ms(uint32_t ms_to_delay)
  * @author SurgeExperiments
  * @brief Use this when you want a delay between 0 and 65.5 ms.
  *
- * 		  If the timer went beyond 65.5ms
- * 		  tim2_delaycount_err_overflow will be set to 1.
+ *        If the timer went beyond 65.5ms
+ *        tim2_delaycount_err_overflow will be set to 1.
  *
- * 		  This function also disables TIM2 afterwards,
- * 		  don't use it while using TIM2 for something else
+ *        This function also disables TIM2 afterwards,
+ *        don't use it while using TIM2 for something else
  */
 void tim2_delay_us(uint32_t us_to_delay)
 {
@@ -277,7 +277,7 @@ uint32_t tim2_us_passed(void)
 /**
  * @author SurgeExperiments
  * @brief function that handles setting up TIM9 for interrupt timing.
- * 		  NOTE: This function is not tested properly.
+ *        NOTE: This function is not tested properly.
  *
  * This function does the math to get the frequency right regardless of sysclock
  */
@@ -306,8 +306,8 @@ void tim9_setup_for_interrupt_timing(void)
  * @brief function that handles setting up TIM2 for delay timing. Works well.
  *
  * IMPORTANT: Due to prescaler-limits this timer will tick twice per ms
- * 	      	  So multiply your desired millis when comparing with the reg with 2.
- * 			  No more than 32.2 ms
+ *            So multiply your desired millis when comparing with the reg with 2.
+ *            No more than 32.2 ms
  */
 void tim9_setup_for_delay_count_ms(void)
 {
@@ -464,7 +464,7 @@ uint32_t tim9_us_passed(void)
 /**
  * @author SurgeExperiments
  * @brief function that handles setting up TIM9 for interrupt timing.
- * 		  NOTE: This function is not tested properly.
+ *        NOTE: This function is not tested properly.
  *
  * Due to prescaler-limits this timer will tick twice per ms
  * So multiply your desired millis when comparing with

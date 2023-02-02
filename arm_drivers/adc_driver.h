@@ -1,6 +1,6 @@
 /**
- *	@file adc_driver.h
- *	@author SurgeExperiments
+ *  @file adc_driver.h
+ *  @author SurgeExperiments
  */
 
 #ifndef ADC_DRIVER_

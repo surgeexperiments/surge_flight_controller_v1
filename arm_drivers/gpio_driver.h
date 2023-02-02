@@ -1,10 +1,10 @@
 /**
- *	@file gpio_driver.h
- *	@author Surge
- *	@date 1/1/2019
+ *  @file gpio_driver.h
+ *  @author Surge
+ *  @date 1/1/2019
  *
- *	@brief  This file contains prototypes for GPIO functions
- *			and defines used with GPIO.
+ *  @brief  This file contains prototypes for GPIO functions
+ *          and defines used with GPIO.
  */
 
 #ifndef GPIO_DRIVER_

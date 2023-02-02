@@ -1,8 +1,8 @@
 /**
- *	@file gpio_driver.c
- *	@author SurgeExperiments
+ *  @file gpio_driver.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains functions to init GPIO pins in various ways.
+ *  @brief This file contains functions to init GPIO pins in various ways.
  */
 
 #include "exti_p.h"
@@ -10,11 +10,11 @@
 #include "nvic_driver.h"
 
 /**
- * @author SurgeExperiments
+ *  @author SurgeExperiments
  *
- * 	@brief Function that activates the clock for GPIO A - E
+ *  @brief Function that activates the clock for GPIO A - E
  *
- * 	@param GPIOx describes which GPIO port to use
+ *  @param GPIOx describes which GPIO port to use
  */
 void gpio_init_clock(GPIO_TypeDef *GPIOx)
 {
@@ -44,16 +44,16 @@ void gpio_init_clock(GPIO_TypeDef *GPIOx)
  * @author SurgeExperiments
  *
  * @brief Function that does the entire init process for a GPIO
- * 		  pin with alternative function.
+ *        pin with alternative function.
  *
- * 	  	  Many functions in the STM, like timer functions with GPIO requires these.
- * 	  	  NOTE: This function is a bit of a hack-job at the moment but it works
- * 				reliably for every mode.
+ *        Many functions in the STM, like timer functions with GPIO requires these.
+ *        NOTE: This function is a bit of a hack-job at the moment but it works
+ *              reliably for every mode.
  *
  * @param[out] GPIOx which gpio port
  * @param pin_number the pin number on the specific gpio port (usually 0-15)
  * @param gpio_af_selector which alternative function.
- * 						   See gpio_driver.h: defines named GPIO_AF_.
+ *                         See gpio_driver.h: defines named GPIO_AF_.
  * @param pin_speed See gpio_driver.h: defines named GPIO_SPEED_
  * @param outputType See gpio_driver.h: defines named GPIO_TYPE_
  * @param pullType See gpio_driver.h: defines GPIO_NOPULL, GPIO_PULLUP or GPIO_PULLDOWN
@@ -117,7 +117,7 @@ void gpio_init_pins_io(GPIO_TypeDef *GPIOx,
 
 /**
  * @brief Test function to configure an interrupt on high->low on PB12
- * 		  (from stm lib)
+ *        (from stm lib)
  */
 void ConfigurePB12_extiRising(void)
 {

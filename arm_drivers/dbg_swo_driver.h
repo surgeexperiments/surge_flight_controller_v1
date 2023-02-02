@@ -1,6 +1,6 @@
 /**
- *	@file dbg_swo_driver.h
- *	@author SurgeExperiments
+ *  @file dbg_swo_driver.h
+ *  @author SurgeExperiments
  */
 
 #ifndef DBG_SWO_DRIVER_

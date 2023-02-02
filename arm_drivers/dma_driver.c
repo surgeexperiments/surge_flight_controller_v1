@@ -1,12 +1,12 @@
 /**
- *	@file dma_driver.c
- *	@author SurgeExperiments
+ *  @file dma_driver.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains the functions to init and de-init the DMA for I2C,
- *	  	   and a general function to init any DMA stream.
+ *  @brief This file contains the functions to init and de-init the DMA for I2C,
+ *         and a general function to init any DMA stream.
  *
- * TODO:
- * - dma_init_i2c: Fix mem addr (dma_perh_base_addr), make this work for more than I2C1
+ *  TODO:
+ *  - dma_init_i2c: Fix mem addr (dma_perh_base_addr), make this work for more than I2C1
  */
 
 #include "dma_driver.h"
@@ -128,9 +128,9 @@ static void dma_de_init(DMA_Stream_TypeDef *DMAy_Streamx)
 }
 
 /**
- * 	@brief Function borrowed from the peripheral library for initing a DMA struct
+ *  @brief Function borrowed from the peripheral library for initing a DMA struct
  *
- * 	See the peripheral lib documentation for into about this function
+ *   See the peripheral lib documentation for into about this function
  */
 static void DMA_Init(DMA_Stream_TypeDef *DMAy_Streamx, DMA_InitTypeDef *DMA_InitStruct)
 {

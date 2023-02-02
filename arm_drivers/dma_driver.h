@@ -1,9 +1,9 @@
 /**
- *	@file dma_driver.h
- *	@author SurgeExperiments
+ *  @file dma_driver.h
+ *  @author SurgeExperiments
  *
- *	@brief  This file contains typedefs for the DMA init structs,
- *			function prototypes and defines used with DMA from the vendor.
+ *  @brief  This file contains typedefs for the DMA init structs,
+ *          function prototypes and defines used with DMA from the vendor.
  */
 
 #ifndef DMA_DRIVER_
@@ -11,10 +11,10 @@
 
 #include "stm32f4xx.h"
 
-/***********************
- *  DATA STRUCTURES    *
- *		               *
- **********************/
+/*********************
+ *  DATA STRUCTURES  *
+ *                   *
+ ********************/
 
 typedef struct
 {

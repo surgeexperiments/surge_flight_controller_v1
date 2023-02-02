@@ -1,26 +1,26 @@
 /**
- *	@file i2c_driver.c
- *	@author SurgeExperiments
+ *  @file i2c_driver.c
+ *  @author SurgeExperiments
  *
- *	@brief This file contains functions to init and use i2c.
- *		   To set up i2c transfers controlled by DMA: check the functions in DMA_driver.c
+ *  @brief This file contains functions to init and use i2c.
+ *         To set up i2c transfers controlled by DMA: check the functions in DMA_driver.c
  */
 
 #include "i2c_driver.h"
 #include "gpio_driver.h"
 #include "rcc_driver.h"
 
-/****************************************************
- *					INIT FUNCTIONS					*
- *													*
- ****************************************************/
+/********************************
+ *        INIT FUNCTIONS        *
+ *                              *
+ *******************************/
 
 /**
- * @author SurgeExperiments
- * @brief function that loads the init struct for the flight controller.
- * 		  TODO: Define this somewhere else later? For now this is ok
- * 				since the controller only uses 400khz for the i2c bus
- * 				which is the only setting we care about.
+ *  @author SurgeExperiments
+ *  @brief function that loads the init struct for the flight controller.
+ *         TODO: Define this somewhere else later? For now this is ok
+ *               since the controller only uses 400khz for the i2c bus
+ *               which is the only setting we care about.
  */
 void i2c_load_init_struct_fc(I2C_InitTypeDef *instance)
 {
@@ -34,18 +34,18 @@ void i2c_load_init_struct_fc(I2C_InitTypeDef *instance)
 }
 
 /**
- * @author SurgeExperiments
- * @brief Function that sets up i2c (1-3) transfer for a GPIO pin.
+ *  @author SurgeExperiments
+ *  @brief Function that sets up i2c (1-3) transfer for a GPIO pin.
  *
- *		  NOTE:One i2c bus can b connected to several pins.
- *		  	   For now one set of pins are selected in this
- *			   function in a way that fits with the use case
- *			   for this flight controller.
- *			   The need to change them is so rare that parameterizing
- *			   this function would only cause clutter.
+ *         NOTE:One i2c bus can b connected to several pins.
+ *              For now one set of pins are selected in this
+ *              function in a way that fits with the use case
+ *              for this flight controller.
+ *              The need to change them is so rare that parameterizing
+ *              this function would only cause clutter.
  *
- * @param I2Cx struct describing which i2c bus to use
- * @retval 0 if success, 1 if fail (due to invalid value of I2Cx)
+ *  @param I2Cx struct describing which i2c bus to use
+ *  @retval 0 if success, 1 if fail (due to invalid value of I2Cx)
  */
 uint8_t i2c_initialize(I2C_TypeDef *I2Cx)
 {
@@ -107,12 +107,12 @@ uint8_t i2c_initialize(I2C_TypeDef *I2Cx)
 }
 
 /**
- * @brief Function that sets up the i2c registers in various ways when initializing an i2c bus.
- *		  (borrowed from stdPerph library, very convenient for prototyping)
-
- * @param I2Cx describing which i2c bus to use
- * @param I2C_InitStruct gives desired settings for the i2c bus.
- * 						 Use i2c_load_init_struct_fc() to set it up.
+ *  @brief Function that sets up the i2c registers in various ways when initializing an i2c bus.
+ *         (borrowed from stdPerph library, very convenient for prototyping)
+ *
+ *  @param I2Cx describing which i2c bus to use
+ *  @param I2C_InitStruct gives desired settings for the i2c bus.
+ *                        Use i2c_load_init_struct_fc() to set it up.
  */
 void i2c_setupRegisters(I2C_TypeDef *I2Cx, I2C_InitTypeDef *I2C_InitStruct)
 {
@@ -216,15 +216,15 @@ void i2c_setupRegisters(I2C_TypeDef *I2Cx, I2C_InitTypeDef *I2C_InitStruct)
 }
 
 /**
- * @author SurgeExperiments
+ *  @author SurgeExperiments
  *
- * @brief function that checks the current status of an i2c transfer.
+ *  @brief function that checks the current status of an i2c transfer.
  *
- * This function is used heavily by other functions to detect errors.
+ *         This function is used heavily by other functions to detect errors.
  *
- * @param I2Cx which i2c bus to use (CMSIS struct)
- * @param STATUS_FLAG which i2c flag to test for. These are defined in i2c_driver.h
- * @retval 1 if STATUS_FLAG is set in the respective i2c bus, 0 if it's not.
+ *  @param I2Cx which i2c bus to use (CMSIS struct)
+ *  @param STATUS_FLAG which i2c flag to test for. These are defined in i2c_driver.h
+ *  @retval 1 if STATUS_FLAG is set in the respective i2c bus, 0 if it's not.
  */
 static uint8_t check_i2c_status(I2C_TypeDef *I2Cx, uint32_t STATUS_FLAG)
 {
@@ -243,18 +243,18 @@ static uint8_t check_i2c_status(I2C_TypeDef *I2Cx, uint32_t STATUS_FLAG)
     }
 }
 
-/********************************************************
- *					USEFUL FUNCTIONS					*
- *														*
- ********************************************************/
+/**********************************
+ *        USEFUL FUNCTIONS        *
+ *                                *
+ *********************************/
 
 /**
- * @brief function to check if something is connected to the i2c port
+ *  @brief function to check if something is connected to the i2c port
  *
- * TODO: Finish
+ *  TODO: Finish
  *
- * @param I2Cx which i2c bus to use
- * @param address which i2c address to check
+ *  @param I2Cx which i2c bus to use
+ *  @param address which i2c address to check
  */
 uint8_t i2c_check_connectivity(I2C_TypeDef *I2Cx, uint8_t address)
 {
@@ -267,19 +267,19 @@ uint8_t i2c_check_connectivity(I2C_TypeDef *I2Cx, uint8_t address)
  ********************************************************/
 
 /**
- * @author SurgeExperiments
+ *  @author SurgeExperiments
  *
- * @brief function that starts an i2c transfer.
- *		  By default: clock stretching is enabled.
+ *  @brief function that starts an i2c transfer.
+ *         By default: clock stretching is enabled.
  *
- * 		  See the reference manual for more info about the
- * 		  specifics of the i2c implementation.
+ *         See the reference manual for more info about the
+ *         specifics of the i2c implementation.
  *
- * @param I2Cx which i2c bus to use
- * @param target_address the address for the item you want to communicate with
- * @param am_i_receiver set True when being a MASTER_RECEIVER,
- * 					    else false/0. See ref manual for more info.
- * @retval 0 if success, 1 if a hw err leads to a timeout.
+ *  @param I2Cx which i2c bus to use
+ *  @param target_address the address for the item you want to communicate with
+ *  @param am_i_receiver set True when being a MASTER_RECEIVER,
+ *                       else false/0. See ref manual for more info.
+ *  @retval 0 if success, 1 if a hw err leads to a timeout.
  */
 uint8_t i2c_start(I2C_TypeDef *I2Cx, uint8_t target_address, uint8_t am_i_receiver)
 {
@@ -367,18 +367,18 @@ uint8_t i2c_stop(I2C_TypeDef *I2Cx)
 }
 
 /**
- * @author SurgeExperiments
+ *  @author SurgeExperiments
  *
- * @brief function to send a byte throgh the i2c bus.
+ *  @brief function to send a byte throgh the i2c bus.
  *
- * INFO: For info about the different parts of the function:
- * 		 check the reference manual, i2c section.
+ *         INFO: For info about the different parts of the function:
+ *         check the reference manual, i2c section.
  *
- * TODO: add a timeout threshold for I2C_FLAG_AF? (for now not needed?)
+ *         TODO: add a timeout threshold for I2C_FLAG_AF? (for now not needed?)
  *
- * @param I2Cx which i2c bus to use
- * @param byte_to_send self explanatory
- * @retval 0 if success, 1-3 if the call fails (the number describes what went wrong)
+ *  @param I2Cx which i2c bus to use
+ *  @param byte_to_send self explanatory
+ *  @retval 0 if success, 1-3 if the call fails (the number describes what went wrong)
  */
 uint8_t i2c_write_byte(I2C_TypeDef *I2Cx, uint8_t byte_to_send)
 {
