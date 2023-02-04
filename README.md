@@ -7,8 +7,8 @@
 ## Note:
 This is an early version of this project that flies well, especially in acro mode (when you
 control the drones angular velocity for each axis with the remote controller).
-Additional stuff like gps (and better auto levelling) have been made however it's not
-flight ready so it's not being uploaded (to avoid crashed drones or safety hazards :)
+Additional things like gps (and better auto levelling) have been made however it's not
+flight ready so it's not being uploaded (to avoid crashed drones and safety hazards :)
 This projetc was initially built for another embedded processor.
 Some of the capabilities from that version have not yet been ported (if you wonder about empty code files).
 
