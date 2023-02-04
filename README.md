@@ -29,7 +29,7 @@ is not included in compilation. However it can be ported and utilized.
 ## Coding style
 - Made for quick prototyping.
   There will be a lot of defines to turn modes on and off. This is very useful when turning
-  stuff on and off while out flight testing the drone and reuploading stuff.
+  things on and off while out flight testing the drone and needing to upload changes to settings.
 
 ## Led menu drone values
 - You can use the led menu with a hitachi LCD panel and buttons to set drone
