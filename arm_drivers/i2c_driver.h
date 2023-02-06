@@ -23,10 +23,10 @@
  */
 #define TIMEOUT_THRESHOLD ((uint32_t)40000)
 
-/*************************************************
- *					DATA STRUCTURES				 *
- *												 *
- *************************************'***********/
+/*********************************
+ *        DATA STRUCTURES        *
+ *                               *
+ ********************************/
 
 typedef struct
 {
@@ -527,10 +527,10 @@ uint8_t i2c_read_nak(I2C_TypeDef *I2Cx, uint8_t *storeHere);
 
 /*
 The interface can operate in one of the four following modes:
-� Slave transmitter
-� Slave receiver
-� Master transmitter
-� Master receive
+- Slave transmitter
+- Slave receiver
+- Master transmitter
+- Master receive
 
 By default, it operates in slave mode. The interface automatically switches from slave to master,
 after it generates a START condition and from master to slave, if an arbitration loss or a Stop generation occurs,
@@ -552,8 +552,8 @@ The I2C interface addresses (dual addressing 7-bit/ 10-bit and/or general call a
 
 The peripheral input clock must be programmed in the I2C_CR2 register in order to generate correct timings.
 The peripheral input clock frequency must be at least:
-� 2 MHz in Sm mode
-� 4 MHz in Fm mode
+- 2 MHz in Sm mode
+- 4 MHz in Fm mode
 
 In 10-bit mode, after receiving the address sequence the slave is always in Receiver mode.
 It will enter Transmitter mode on receiving a repeated Start condition followed by the header sequence with matching address
@@ -565,21 +565,21 @@ In Master mode, the I2C interface initiates a data transfer and generates the cl
 A serial data transfer always begins with a Start condition and ends with a Stop condition.
 Master mode is selected as soon as the Start condition is generated on the bus with a START bit.
 The following is the required sequence in master mode:
-� Program the peripheral input clock in I2C_CR2 Register in order to generate correct timings
-� Configure the clock control registers
-� Configure the rise time register
-� Program the I2C_CR1 register to enable the peripheral
-� Set the START bit in the I2C_CR1 register to generate a Start condition The peripheral input clock frequency must be at least:
-� 2 MHz in Sm mode � 4 MHz in Fm mode
+- Program the peripheral input clock in I2C_CR2 Register in order to generate correct timings
+- Configure the clock control registers
+- Configure the rise time register
+- Program the I2C_CR1 register to enable the peripheral
+- Set the START bit in the I2C_CR1 register to generate a Start condition The peripheral input clock frequency must be at least:
+- 2 MHz in Sm mode � 4 MHz in Fm mode
 
 SCL master clock generation
 The CCR bits are used to generate the high and low level of the SCL clock,
 starting from the generation of the rising and falling edge (respectively).
 As a slave may stretch the SCL line, the peripheral checks the SCL input
 from the bus at the end of the time programmed in TRISE bits after rising edge generation.
-� If the SCL line is low, it means that a slave is stretching the bus, and the high level counter stops until the SCL line is detected high.
+- If the SCL line is low, it means that a slave is stretching the bus, and the high level counter stops until the SCL line is detected high.
   This allows to guarantee the minimum HIGH period of the SCL clock parameter.
-� If the SCL line is high, the high level counter keeps on counting. Indeed, the feedback loop from the SCL rising
+- If the SCL line is high, the high level counter keeps on counting. Indeed, the feedback loop from the SCL rising
   edge generation by the peripheral to the SCL rising edge detection by the peripheral takes time even if no slave stretches the clock.
   This loopback duration is linked to the SCL rising time (impacting SCL VIH input detection),
   plus delay due to the noise filter present on the SCL input path, plus delay due to internal SCL input synchronization with APB clock.
@@ -589,19 +589,19 @@ Start condition
 Setting the START bit causes the interface to generate a Start condition and to switch to Master mode (MSL bit set) when the BUSY bit is cleared.
 Note: In master mode, setting the START bit causes the interface to generate a ReStart condition at the end of the current byte transfer.
 Once the Start condition is sent:
-� The SB bit is set by hardware and an interrupt is generated if the ITEVFEN bit is set. Then the master waits for a read of the
+- The SB bit is set by hardware and an interrupt is generated if the ITEVFEN bit is set. Then the master waits for a read of the
   SR1 register followed by a write in the DR register with the Slave address
 
 Slave address transmission
 Then the slave address is sent to the SDA line via the internal shift register.
-� In 7-bit addressing mode, one address byte is sent. As soon as the address byte is sent,
-� The ADDR bit is set by hardware and an interrupt is generated if the ITEVFEN bit is set.
+- In 7-bit addressing mode, one address byte is sent. As soon as the address byte is sent,
+- The ADDR bit is set by hardware and an interrupt is generated if the ITEVFEN bit is set.
 Then the master waits for a read of the SR1 register followed by a read of the SR2 register
 
 The master can decide to enter Transmitter or Receiver mode depending on the LSB of the slave address sent.
-� In 7-bit addressing mode,
-� To enter Transmitter mode, a master sends the slave address with LSB reset.
-� To enter Receiver mode, a master sends the slave address with LSB set.
+- In 7-bit addressing mode,
+- To enter Transmitter mode, a master sends the slave address with LSB reset.
+- To enter Receiver mode, a master sends the slave address with LSB set.
 
 Master transmitter
 Following the address transmission and after clearing ADDR, the master sends bytes from the DR register to the SDA line via the internal shift register.
@@ -637,73 +637,73 @@ After the Stop condition generation, the interface goes automatically back to sl
 
 The procedures described below are recommended if the EV7-1 software sequence is not completed before the ACK pulse of the current byte transfer.
 These procedures must be followed to make sure:
-� The ACK bit is set low on time before the end of the last data reception
-� The STOP bit is set high after the last data reception without reception of supplementary data.
+- The ACK bit is set low on time before the end of the last data reception
+- The STOP bit is set high after the last data reception without reception of supplementary data.
 
 For 2-byte reception:
-� Wait until ADDR = 1 (SCL stretched low until the ADDR flag is cleared)
-� Set ACK low, set POS high
-� Clear ADDR flag
-� Wait until BTF = 1 (Data 1 in DR, Data2 in shift register, SCL stretched low until a data 1 is read)
-� Set STOP high
-� Read data 1 and 2
+- Wait until ADDR = 1 (SCL stretched low until the ADDR flag is cleared)
+- Set ACK low, set POS high
+- Clear ADDR flag
+- Wait until BTF = 1 (Data 1 in DR, Data2 in shift register, SCL stretched low until a data 1 is read)
+- Set STOP high
+- Read data 1 and 2
 
 For N >2 -byte reception, from N-2 data reception
-� Wait until BTF = 1 (data N-2 in DR, data N-1 in shift register, SCL stretched low until data N-2 is read)
-� Set ACK low
-� Read data N-2
-� Wait until BTF = 1 (data N-1 in DR, data N in shift register, SCL stretched low until a data N-1 is read)
-� Set STOP high
-� Read data N-1 and N
+- Wait until BTF = 1 (data N-2 in DR, data N-1 in shift register, SCL stretched low until data N-2 is read)
+- Set ACK low
+- Read data N-2
+- Wait until BTF = 1 (data N-1 in DR, data N in shift register, SCL stretched low until a data N-1 is read)
+- Set STOP high
+- Read data N-1 and N
 
 ERRORS:
 
 Bus error (BERR)
 This error occurs when the I2C interface detects an external Stop or Start condition during an address or a data transfer.
 In this case:
-� the BERR bit is set and an interrupt is generated if the ITERREN bit is set
-� in Slave mode: data are discarded and the lines are released by hardware:
-� in case of a misplaced Start, the slave considers it is a restart and waits for an address, or a Stop condition
-� in case of a misplaced Stop, the slave behaves like for a Stop condition and the lines are released by hardware
-� In Master mode: the lines are not released and the state of the current transmission is not affected.
+- the BERR bit is set and an interrupt is generated if the ITERREN bit is set
+- in Slave mode: data are discarded and the lines are released by hardware:
+- in case of a misplaced Start, the slave considers it is a restart and waits for an address, or a Stop condition
+- in case of a misplaced Stop, the slave behaves like for a Stop condition and the lines are released by hardware
+- In Master mode: the lines are not released and the state of the current transmission is not affected.
 It is up to the software to abort or not the current transmission Acknowledge failure (AF)
 This error occurs when the interface detects a nonacknowledge bit.
 In this case:
-� the AF bit is set and an interrupt is generated if the ITERREN bit is set
-� a transmitter which receives a NACK must reset the communication:
-� If Slave: lines are released by hardware
-� If Master: a Stop or repeated Start condition must be generated by software Arbitration lost (ARLO)
+- the AF bit is set and an interrupt is generated if the ITERREN bit is set
+- a transmitter which receives a NACK must reset the communication:
+- If Slave: lines are released by hardware
+- If Master: a Stop or repeated Start condition must be generated by software Arbitration lost (ARLO)
 This error occurs when the I2C interface detects an arbitration lost condition.
 In this case,
-� the ARLO bit is set by hardware (and an interrupt is generated if the ITERREN bit is set)
-� the I2C Interface goes automatically back to slave mode (the MSL bit is cleared). When the I2C loses the arbitration,
+- the ARLO bit is set by hardware (and an interrupt is generated if the ITERREN bit is set)
+- the I2C Interface goes automatically back to slave mode (the MSL bit is cleared). When the I2C loses the arbitration,
 it is not able to acknowledge its slave address in the same transfer, but it can acknowledge it after a repeated Start from the winning master.
-� lines are released by hardware
+- lines are released by hardware
 
 Overrun/underrun error (OVR)
 An overrun error can occur in slave mode when clock stretching is disabled and the I2C interface is receiving data.
 The interface has received a byte (RxNE=1) and the data in DR has not been read, before the next byte is received by the interface.
 In this case,
-� The last received byte is lost.
-� In case of Overrun error, software should clear the RxNE bit and the transmitter should re-transmit the last received byte.
+- The last received byte is lost.
+- In case of Overrun error, software should clear the RxNE bit and the transmitter should re-transmit the last received byte.
   Underrun error can occur in slave mode when clock stretching is disabled and the I2C interface is transmitting data.
   The interface has not updated the DR with the next byte (TxE=1), before the clock comes for the next byte. In this case,
-  � The same byte in the DR register will be sent again
-  � The user should make sure that data received on the receiver side during an underrun error are discarded and that the next bytes are written within the
+  - The same byte in the DR register will be sent again
+  - The user should make sure that data received on the receiver side during an underrun error are discarded and that the next bytes are written within the
   clock low time specified in the I2C bus standard. For the first byte to be transmitted, the DR must be written after ADDR
   is cleared and before the first SCL rising edge. If not possible, the receiver must discard the first data.
 
 
 SDA/SCL line control
-� If clock stretching is enabled:
-� Transmitter mode: If TxE=1 and BTF=1: the interface holds the clock line low before transmission to wait for the microcontroller to write the byte in the Data
+- If clock stretching is enabled:
+- Transmitter mode: If TxE=1 and BTF=1: the interface holds the clock line low before transmission to wait for the microcontroller to write the byte in the Data
   Register (both buffer and shift register are empty).
-� Receiver mode: If RxNE=1 and BTF=1: the interface holds the clock line low after reception to wait for
+- Receiver mode: If RxNE=1 and BTF=1: the interface holds the clock line low after reception to wait for
   the microcontroller to read the byte in the Data Register (both buffer and shift register are full).
-� If clock stretching is disabled in Slave mode:
-� Overrun Error in case of RxNE=1 and no read of DR has been done before the next byte is received. The last received byte is lost.
-� Underrun Error in case TxE=1 and no write into DR has been done before the next byte must be transmitted. The same byte will be sent again.
-� Write Collision not managed.
+- If clock stretching is disabled in Slave mode:
+- Overrun Error in case of RxNE=1 and no read of DR has been done before the next byte is received. The last received byte is lost.
+- Underrun Error in case TxE=1 and no write into DR has been done before the next byte must be transmitted. The same byte will be sent again.
+- Write Collision not managed.
 
 DMA requests
 DMA requests (when enabled) are generated only for data transfer.
@@ -712,13 +712,13 @@ The DMA must be initialized and enabled before the I2C data transfer. The DMAEN 
 In master mode or in slave mode when clock stretching is enabled, the DMAEN bit can also be set during the ADDR event, before clearing the ADDR flag.
 The DMA request must be served before the end of the current byte transfer. When the number of data transfers which has been programmed for the corresponding
 DMA stream is reached, the DMA controller sends an End of Transfer EOT signal to the I2C interface and generates a Transfer Complete interrupt if enabled:
-� Master transmitter: In the interrupt routine after the EOT interrupt, disable DMA requests then wait for a BTF event before programming the Stop condition.
-� Master receiver � When the number of bytes to be received is equal to or greater than two, the DMA controller sends a hardware signal, EOT_1, corresponding to the
-  last but one data byte (number_of_bytes � 1). If, in the I2C_CR2 register, the LAST bit is set, I2C automatically sends a NACK after the next byte
+- Master transmitter: In the interrupt routine after the EOT interrupt, disable DMA requests then wait for a BTF event before programming the Stop condition.
+- Master receiver � When the number of bytes to be received is equal to or greater than two, the DMA controller sends a hardware signal, EOT_1, corresponding to the
+  last but one data byte (number_of_bytes  1). If, in the I2C_CR2 register, the LAST bit is set, I2C automatically sends a NACK after the next byte
   following EOT_1.
 
   The user can generate a Stop condition in the DMA Transfer Complete interrupt routine if enabled.
-  � When a single byte must be received: the NACK must be programmed during EV6 event, i.e. program ACK=0 when ADDR=1, before clearing ADDR flag.
+  - When a single byte must be received: the NACK must be programmed during EV6 event, i.e. program ACK=0 when ADDR=1, before clearing ADDR flag.
     Then the user can program the STOP condition either after clearing ADDR flag, or in the DMA Transfer Complete interrupt routine. Transmission
     using DMA DMA mode can be enabled for transmission by setting the DMAEN bit in the I2C_CR2 register.
     Data will be loaded from a Memory area configured using the DMA peripheral (refer to the DMA specification) to the I2C_DR register whenever the TxE bit is set.

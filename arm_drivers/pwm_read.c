@@ -164,7 +164,7 @@ static void set_timer_registers_pwm_read(TIM_TypeDef *TIMx)
     /* REFERENCE MANUAL:
      * Select the active polarity for TI1FP1 (used both for capture
      * in TIMx_CCR1 and counter clear): write the CC1P to �0�
-     * and the CC1NP bit to �0� (active on rising edge).
+     * and the CC1NP bit to '0' (active on rising edge).
      * Reset TIM4->CCMR1 |= TIM_CCMR1_CC2S_1; // 0x0200: sets the
      * two bits to 10ets both to 0, nothing needs to be done.
      */
@@ -179,8 +179,8 @@ static void set_timer_registers_pwm_read(TIM_TypeDef *TIMx)
 
     /* REFERENCE MANUAL:
      * Select the active polarity for TI1FP2 (used for capture in TIMx_CCR2):
-     * write the CC2P bit to �1� and the CC2NP bit
-     * to �0�(active on falling edge).
+     * write the CC2P bit to '1' and the CC2NP bit
+     * to '0'(active on falling edge).
      */
     TIMx->CCER = TIM_CCER_CC2P; // 0x0020, set bit 5 to 1
 
@@ -201,7 +201,7 @@ static void set_timer_registers_pwm_read(TIM_TypeDef *TIMx)
 
     /* REFERENCE MANUAL:
      * Enable the captures: write the CC1E and CC2E bits to
-     * �1 in the TIMx_CCER register.
+     * 1 in the TIMx_CCER register.
      */
     TIMx->CCER |= (1U << 0) | (1U << 4);
 

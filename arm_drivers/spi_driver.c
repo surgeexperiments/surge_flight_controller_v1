@@ -191,10 +191,10 @@ uint8_t spi_send_u8(SPI_TypeDef *SPIx, uint8_t data)
 
 /* INFO:
 
-� MISO: Master In / Slave Out data. This pin can be used to transmit data in slave mode and receive data in master mode.
-� MOSI: Master Out / Slave In data. This pin can be used to transmit data in master mode and receive data in slave mode.
-� SCK: Serial Clock output for SPI masters and input for SPI slaves.
-� NSS: Slave select. This is an optional pin to select a slave device. This pin acts as a �chip select� to let the SPI master communicate with
+- MISO: Master In / Slave Out data. This pin can be used to transmit data in slave mode and receive data in master mode.
+- MOSI: Master Out / Slave In data. This pin can be used to transmit data in master mode and receive data in slave mode.
+- SCK: Serial Clock output for SPI masters and input for SPI slaves.
+- NSS: Slave select. This is an optional pin to select a slave device. This pin acts as a chip select to let the SPI master communicate with
        slaves individually and to avoid contention on the data lines. Slave NSS inputs can be driven by standard IO ports on the master device.
              The NSS pin may also be used as an output if enabled (SSOE bit) and driven low if the SPI is in master configuration. In this manner,
              all NSS pins from devices connected to the Master NSS pin see a low level and become slaves when they are configured in NSS hardware mode.
@@ -205,10 +205,10 @@ The master initiates the transfer.
 Full duplex is supported as the slave can get data on MOSI while transferring on MISO
 
 Slave select (NSS) pin management Hardware or software slave select management can be set using the SSM bit in the SPI_CR1 register.
-� Software NSS management (SSM = 1) The slave select information is driven internally by the value of the SSI bit in the SPI_CR1 register.
+- Software NSS management (SSM = 1) The slave select information is driven internally by the value of the SSI bit in the SPI_CR1 register.
   The external NSS pin remains free for other application uses.
-� Hardware NSS management (SSM = 0) Two configurations are possible depending
-    on the NSS output configuration (SSOE bit in register SPI_CR2). � NSS output enabled (SSM = 0, SSOE = 1)
+- Hardware NSS management (SSM = 0) Two configurations are possible depending
+    on the NSS output configuration (SSOE bit in register SPI_CR2). NSS output enabled (SSM = 0, SSOE = 1)
     This configuration is used only when the device operates in master mode.
     The NSS signal is driven low when the master starts the communication and is kept low until the SPI is disabled.
 
@@ -251,8 +251,8 @@ on the LSBFIRST bit in the SPI_CR1 register. The TXE flag is set on the transfer
 interrupt is generated if the TXEIE bit in the SPI_CR2 register is set.
 
 Receive sequence For the receiver, when data transfer is complete:
-� The data in the shift register is transferred to the RX Buffer and the RXNE flag is set
-� An interrupt is generated if the RXNEIE bit is set in the SPI_CR2 register At the last sampling clock edge the RXNE bit is set,
+- The data in the shift register is transferred to the RX Buffer and the RXNE flag is set
+- An interrupt is generated if the RXNEIE bit is set in the SPI_CR2 register At the last sampling clock edge the RXNE bit is set,
   a copy of the data byte received in the shift register is moved to the Rx buffer. When the SPI_DR register is read, the SPI peripheral
     returns this buffered value. Clearing the RXNE bit is performed by reading the SPI_DR register. A continuous transmit stream can
     be maintained if the next data to be transmitted is put in the Tx buffer once the transmission is started. Note that TXE flag should be
@@ -262,7 +262,7 @@ Receive sequence For the receiver, when data transfer is complete:
 E-compass MEMS (ST MEMS LSM303DLHC) The LSM303DLHC is an ultra-compact low-power system-in-package featuring a
 3D digital linear acceleration sensor and a 3D digital magnetic sensor. It includes a sensing element and an
 IC interface able to provide the measured acceleration to the external world through an I2C serial interface.
-The LSM303DLHC has dynamically user-selectable full scales of � 2g/� 8g and is capable of measuring the acceleration, and a
+The LSM303DLHC has dynamically user-selectable full scales of  2g/8g and is capable of measuring the acceleration, and a
 magnetic field full scale from �1.3 g to 8.1 g with an output data rate of 100 Hz or 400 Hz.
 The STM32F411VET6 MCU controls this motion sensor through the I2C interface.
 

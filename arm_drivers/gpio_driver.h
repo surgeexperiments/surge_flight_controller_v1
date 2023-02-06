@@ -76,12 +76,12 @@ Using the GPIOx_BSRR register to change the values of individual bits in GPIOx_O
 The GPIOx_ODR bits can always be accessed directly. The GPIOx_BSRR register provides a way of performing atomic bitwise handling.
 
 Alternate function configuration When the I/O port is programmed as alternate function:
-� The output buffer can be configured as open-drain or push-pull
-� The output buffer is driven by the signal coming from the peripheral (transmitter enable and data)
-� The Schmitt trigger input is activated
-� The weak pull-up and pull-down resistors are activated or not depending on the value in the GPIOx_PUPDR register
-� The data present on the I/O pin are sampled into the input data register every AHB clock cycle
-� A read access to the input data register gets the I/O state
+- The output buffer can be configured as open-drain or push-pull
+- The output buffer is driven by the signal coming from the peripheral (transmitter enable and data)
+- The Schmitt trigger input is activated
+- The weak pull-up and pull-down resistors are activated or not depending on the value in the GPIOx_PUPDR register
+- The data present on the I/O pin are sampled into the input data register every AHB clock cycle
+- A read access to the input data register gets the I/O state
 
 
 PB8: TIM4_CH3, TIM10_CH1, I2C1_SCL

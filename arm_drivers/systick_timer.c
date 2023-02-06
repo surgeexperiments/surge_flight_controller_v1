@@ -26,7 +26,7 @@ void SysTick_Handler(void)
 
 uint32_t micros_passed(void)
 {
-    /* sysTick counts down so (1000 � SysTick->VAL/sysTickToMilliseconds)
+    /* sysTick counts down so (1000  SysTick->VAL/sysTickToMilliseconds)
      * gives you the current microseconds
      */
     return systick_overflow_count * 1000 + (1000 - SYSTICK_VAL_REG / systick_to_milliseconds);
